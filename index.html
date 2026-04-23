@@ -71,7 +71,6 @@ cursor:pointer;
 
 <div class="products">
 
-<!-- PRODUCT TEMPLATE (reused) -->
 <div class="card">
 <img src="strain1.jpg">
 <h3>Premium Strain 🔥</h3>
@@ -98,8 +97,6 @@ cursor:pointer;
 Order on WhatsApp
 </button>
 </div>
-
-<!-- COPY SAME STRUCTURE FOR OTHER PRODUCTS -->
 
 <div class="card">
 <img src="strain2.jpg">
@@ -199,6 +196,14 @@ if(qty >= 5) return 0.10;
 return 0;
 }
 
+function sizeLabel(size){
+if(size == 0.125) return "1/8 oz";
+if(size == 0.5) return "1/2 oz";
+if(size == 1) return "1 oz";
+if(size == 16) return "1 lb";
+return size + " oz";
+}
+
 function order(product, sizeId, qtyId, customId){
 const size = parseFloat(document.getElementById(sizeId).value);
 const qtySelect = document.getElementById(qtyId).value;
@@ -211,7 +216,7 @@ const total = (pricePerOz * size * qty) * (1 - discount);
 
 const msg = "DIABLITO\n\nOrder Request\n\n" +
 product + "\n" +
-"Size: " + (size * 1) + " oz\n" +
+"Size: " + sizeLabel(size) + "\n" +
 "Quantity: " + qty + "\n" +
 "Total: $" + total.toFixed(2) + "\n" +
 "Please confirm availability and total.\n\n";
