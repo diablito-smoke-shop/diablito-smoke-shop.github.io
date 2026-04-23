@@ -1,13 +1,162 @@
-function toggleCustom(qtyId, customId){
-const select = document.getElementById(qtyId);
-const input = document.getElementById(customId);
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{margin:0;font-family:Arial;background:#050505;color:#fff;text-align:center}
+.header{background:#000;padding:15px;border-bottom:1px solid #222}
+.logo{font-size:1.8rem;color:#ff1a1a}
+.hero{padding:30px}
+.hero h1{text-shadow:0 0 15px red}
+.trust{font-size:0.9rem;opacity:0.8;margin-bottom:10px}
+.video{padding:10px}
+.video video{width:90%;border-radius:10px}
 
-if(!select || !input) return;
+.products{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+gap:12px;
+padding:15px
+}
 
-if(select.value === "more"){
-input.style.display = "block";
-} else {
-input.style.display = "none";
-input.value = "";
+.card{
+background:#111;
+border-radius:10px;
+overflow:hidden;
+box-shadow:0 0 10px rgba(255,0,0,0.3);
+padding-bottom:10px;
 }
+
+.card img{
+width:100%;
+height:140px;
+object-fit:cover
 }
+
+select,input{
+width:90%;
+margin:5px 0;
+padding:6px;
+}
+
+button{
+background:#25D366;
+color:#fff;
+border:none;
+padding:10px;
+width:90%;
+font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header"><div class="logo">🔥 DIABLITO</div></div>
+
+<div class="hero">
+<h1>Premium Smoke Experience</h1>
+<p>Order instantly via WhatsApp</p>
+<div class="trust">🚚 Same Day Delivery • 🔒 Discreet • ⭐ Trusted in Tijuana</div>
+</div>
+
+<div class="video">
+<video controls>
+<source src="GrowHub.mp4" type="video/mp4">
+</video>
+</div>
+
+<div class="products">
+
+<!-- PRODUCT 1 -->
+<div class="card">
+<img src="strain1.jpg">
+<h3>Premium Strain 🔥</h3>
+
+<select id="size1">
+<option value="1/8 oz">1/8 oz</option>
+<option value="1/2 oz">1/2 oz</option>
+<option value="1 oz">1 oz</option>
+<option value="1 lb">1 lb</option>
+</select>
+
+<select id="qty1">
+<option value="1">Qty: 1</option>
+<option value="2">Qty: 2</option>
+<option value="3">Qty: 3</option>
+<option value="4">Qty: 4</option>
+<option value="5">Qty: 5</option>
+<option value="6">Qty: 6</option>
+<option value="7">Qty: 7</option>
+<option value="8">Qty: 8</option>
+<option value="9">Qty: 9</option>
+<option value="10">Qty: 10</option>
+<option value="more">More...</option>
+</select>
+
+<input id="custom1" type="number" placeholder="Enter quantity" style="display:none">
+
+<button onclick="order('Premium Strain','size1','qty1','custom1')">
+Order on WhatsApp
+</button>
+</div>
+
+<!-- PRODUCT 2 -->
+<div class="card">
+<img src="strain2.jpg">
+<h3>Exotic Strain 💨</h3>
+
+<select id="size2">
+<option value="1/8 oz">1/8 oz</option>
+<option value="1/2 oz">1/2 oz</option>
+<option value="1 oz">1 oz</option>
+<option value="1 lb">1 lb</option>
+</select>
+
+<select id="qty2">
+<option value="1">Qty: 1</option>
+<option value="2">Qty: 2</option>
+<option value="3">Qty: 3</option>
+<option value="4">Qty: 4</option>
+<option value="5">Qty: 5</option>
+<option value="6">Qty: 6</option>
+<option value="7">Qty: 7</option>
+<option value="8">Qty: 8</option>
+<option value="9">Qty: 9</option>
+<option value="10">Qty: 10</option>
+<option value="more">More...</option>
+</select>
+
+<input id="custom2" type="number" placeholder="Enter quantity" style="display:none">
+
+<button onclick="order('Exotic Strain','size2','qty2','custom2')">
+Order on WhatsApp
+</button>
+</div>
+
+</div>
+
+<script>
+function order(product, sizeId, qtyId, customId){
+
+let size=document.getElementById(sizeId).value;
+let qty=document.getElementById(qtyId).value;
+
+if(qty==="more"){
+qty=document.getElementById(customId).value || "Not specified";
+}
+
+const msg=encodeURIComponent(
+"🔥 DIABLITO ORDER\n\n" +
+"Product: " + product + "\n" +
+"Size: " + size + "\n" +
+"Quantity: " + qty + "\n\n" +
+"Please confirm availability 💬"
+);
+
+window.open("https://wa.me/526635130363?text="+msg);
+}
+</script>
+
+</body>
+</html>
