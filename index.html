@@ -12,6 +12,12 @@ body{margin:0;font-family:Arial;background:#050505;color:#fff;text-align:center}
 .video{padding:10px}
 .video video{width:90%;border-radius:10px}
 
+.promo{
+background:#ff1a1a;
+padding:10px;
+font-weight:bold;
+}
+
 .products{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
@@ -33,7 +39,7 @@ height:140px;
 object-fit:cover
 }
 
-select,input{
+select{
 width:90%;
 margin:5px 0;
 padding:6px;
@@ -60,6 +66,10 @@ font-weight:bold;
 <div class="trust">🚚 Same Day Delivery • 🔒 Discreet • ⭐ Trusted in Tijuana</div>
 </div>
 
+<div class="promo">
+🔥 BUY MORE = BETTER DEALS 🔥
+</div>
+
 <div class="video">
 <video controls>
 <source src="GrowHub.mp4" type="video/mp4">
@@ -68,7 +78,7 @@ font-weight:bold;
 
 <div class="products">
 
-<!-- PRODUCT 1 -->
+<!-- PRODUCT TEMPLATE -->
 <div class="card">
 <img src="strain1.jpg">
 <h3>Premium Strain 🔥</h3>
@@ -86,22 +96,13 @@ font-weight:bold;
 <option value="3">Qty: 3</option>
 <option value="4">Qty: 4</option>
 <option value="5">Qty: 5</option>
-<option value="6">Qty: 6</option>
-<option value="7">Qty: 7</option>
-<option value="8">Qty: 8</option>
-<option value="9">Qty: 9</option>
-<option value="10">Qty: 10</option>
-<option value="more">More...</option>
 </select>
 
-<input id="custom1" type="number" placeholder="Enter quantity" style="display:none">
-
-<button onclick="order('Premium Strain','size1','qty1','custom1')">
+<button onclick="order('Premium Strain','size1','qty1')">
 Order on WhatsApp
 </button>
 </div>
 
-<!-- PRODUCT 2 -->
 <div class="card">
 <img src="strain2.jpg">
 <h3>Exotic Strain 💨</h3>
@@ -119,17 +120,57 @@ Order on WhatsApp
 <option value="3">Qty: 3</option>
 <option value="4">Qty: 4</option>
 <option value="5">Qty: 5</option>
-<option value="6">Qty: 6</option>
-<option value="7">Qty: 7</option>
-<option value="8">Qty: 8</option>
-<option value="9">Qty: 9</option>
-<option value="10">Qty: 10</option>
-<option value="more">More...</option>
 </select>
 
-<input id="custom2" type="number" placeholder="Enter quantity" style="display:none">
+<button onclick="order('Exotic Strain','size2','qty2')">
+Order on WhatsApp
+</button>
+</div>
 
-<button onclick="order('Exotic Strain','size2','qty2','custom2')">
+<div class="card">
+<img src="strain3.jpg">
+<h3>Top Shelf Strain 🌿</h3>
+
+<select id="size3">
+<option value="1/8 oz">1/8 oz</option>
+<option value="1/2 oz">1/2 oz</option>
+<option value="1 oz">1 oz</option>
+<option value="1 lb">1 lb</option>
+</select>
+
+<select id="qty3">
+<option value="1">Qty: 1</option>
+<option value="2">Qty: 2</option>
+<option value="3">Qty: 3</option>
+<option value="4">Qty: 4</option>
+<option value="5">Qty: 5</option>
+</select>
+
+<button onclick="order('Top Shelf Strain','size3','qty3')">
+Order on WhatsApp
+</button>
+</div>
+
+<div class="card">
+<img src="allstrains.jpg">
+<h3>All Strains Pack</h3>
+
+<select id="size4">
+<option value="1/8 oz">1/8 oz</option>
+<option value="1/2 oz">1/2 oz</option>
+<option value="1 oz">1 oz</option>
+<option value="1 lb">1 lb</option>
+</select>
+
+<select id="qty4">
+<option value="1">Qty: 1</option>
+<option value="2">Qty: 2</option>
+<option value="3">Qty: 3</option>
+<option value="4">Qty: 4</option>
+<option value="5">Qty: 5</option>
+</select>
+
+<button onclick="order('All Strains Pack','size4','qty4')">
 Order on WhatsApp
 </button>
 </div>
@@ -137,21 +178,15 @@ Order on WhatsApp
 </div>
 
 <script>
-function order(product, sizeId, qtyId, customId){
-
-let size=document.getElementById(sizeId).value;
-let qty=document.getElementById(qtyId).value;
-
-if(qty==="more"){
-qty=document.getElementById(customId).value || "Not specified";
-}
+function order(product, sizeId, qtyId){
+const size=document.getElementById(sizeId).value;
+const qty=document.getElementById(qtyId).value;
 
 const msg=encodeURIComponent(
-"🔥 DIABLITO ORDER\n\n" +
-"Product: " + product + "\n" +
-"Size: " + size + "\n" +
-"Quantity: " + qty + "\n\n" +
-"Please confirm availability 💬"
+"🔥 DIABLITO ORDER%0AProduct: "+product+
+"%0ASize: "+size+
+"%0AQuantity: "+qty+
+"%0A%0A(Ask for bulk discount 🔥)"
 );
 
 window.open("https://wa.me/526635130363?text="+msg);
