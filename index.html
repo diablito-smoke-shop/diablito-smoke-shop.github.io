@@ -12,11 +12,7 @@ body{margin:0;font-family:Arial;background:#050505;color:#fff;text-align:center}
 .video{padding:10px}
 .video video{width:90%;border-radius:10px}
 
-.promo{
-background:#ff1a1a;
-padding:10px;
-font-weight:bold;
-}
+.promo{background:#ff1a1a;padding:10px;font-weight:bold;}
 
 .products{
 display:grid;
@@ -33,21 +29,15 @@ box-shadow:0 0 10px rgba(255,0,0,0.3);
 padding-bottom:10px;
 }
 
-.card img{
-width:100%;
-height:140px;
-object-fit:cover
-}
+.card img{width:100%;height:140px;object-fit:cover}
 
-select, input{
+select,input{
 width:90%;
 margin:5px 0;
 padding:6px;
 }
 
-input{
-display:none;
-}
+input{display:none;}
 
 button{
 background:#25D366;
@@ -71,9 +61,7 @@ cursor:pointer;
 <div class="trust">🚚 Same Day Delivery • 🔒 Discreet • ⭐ Trusted in Tijuana</div>
 </div>
 
-<div class="promo">
-🔥 BUY MORE = BETTER DEALS 🔥
-</div>
+<div class="promo">🔥 BUY MORE = BETTER DEALS 🔥</div>
 
 <div class="video">
 <video controls>
@@ -83,16 +71,16 @@ cursor:pointer;
 
 <div class="products">
 
-<!-- PRODUCT 1 -->
+<!-- PRODUCT TEMPLATE (reused) -->
 <div class="card">
 <img src="strain1.jpg">
 <h3>Premium Strain 🔥</h3>
 
 <select id="size1">
-<option value="1/8 oz">1/8 oz</option>
-<option value="1/2 oz">1/2 oz</option>
-<option value="1 oz">1 oz</option>
-<option value="1 lb">1 lb</option>
+<option value="0.125">1/8 oz</option>
+<option value="0.5">1/2 oz</option>
+<option value="1">1 oz</option>
+<option value="16">1 lb</option>
 </select>
 
 <select id="qty1" onchange="toggleCustomQty('qty1','custom1')">
@@ -111,16 +99,17 @@ Order on WhatsApp
 </button>
 </div>
 
-<!-- PRODUCT 2 -->
+<!-- COPY SAME STRUCTURE FOR OTHER PRODUCTS -->
+
 <div class="card">
 <img src="strain2.jpg">
 <h3>Exotic Strain 💨</h3>
 
 <select id="size2">
-<option value="1/8 oz">1/8 oz</option>
-<option value="1/2 oz">1/2 oz</option>
-<option value="1 oz">1 oz</option>
-<option value="1 lb">1 lb</option>
+<option value="0.125">1/8 oz</option>
+<option value="0.5">1/2 oz</option>
+<option value="1">1 oz</option>
+<option value="16">1 lb</option>
 </select>
 
 <select id="qty2" onchange="toggleCustomQty('qty2','custom2')">
@@ -139,16 +128,15 @@ Order on WhatsApp
 </button>
 </div>
 
-<!-- PRODUCT 3 -->
 <div class="card">
 <img src="strain3.jpg">
 <h3>Top Shelf Strain 🌿</h3>
 
 <select id="size3">
-<option value="1/8 oz">1/8 oz</option>
-<option value="1/2 oz">1/2 oz</option>
-<option value="1 oz">1 oz</option>
-<option value="1 lb">1 lb</option>
+<option value="0.125">1/8 oz</option>
+<option value="0.5">1/2 oz</option>
+<option value="1">1 oz</option>
+<option value="16">1 lb</option>
 </select>
 
 <select id="qty3" onchange="toggleCustomQty('qty3','custom3')">
@@ -167,16 +155,15 @@ Order on WhatsApp
 </button>
 </div>
 
-<!-- PRODUCT 4 -->
 <div class="card">
 <img src="allstrains.jpg">
 <h3>All Strains Pack</h3>
 
 <select id="size4">
-<option value="1/8 oz">1/8 oz</option>
-<option value="1/2 oz">1/2 oz</option>
-<option value="1 oz">1 oz</option>
-<option value="1 lb">1 lb</option>
+<option value="0.125">1/8 oz</option>
+<option value="0.5">1/2 oz</option>
+<option value="1">1 oz</option>
+<option value="16">1 lb</option>
 </select>
 
 <select id="qty4" onchange="toggleCustomQty('qty4','custom4')">
@@ -198,28 +185,35 @@ Order on WhatsApp
 </div>
 
 <script>
+const pricePerOz = 376.47;
+
 function toggleCustomQty(selectId, inputId){
 const select = document.getElementById(selectId);
 const input = document.getElementById(inputId);
-
-if(select.value === "custom"){
-input.style.display = "block";
-}else{
-input.style.display = "none";
+input.style.display = (select.value === "custom") ? "block" : "none";
 }
+
+function getDiscount(qty){
+if(qty >= 10) return 0.20;
+if(qty >= 5) return 0.10;
+return 0;
 }
 
 function order(product, sizeId, qtyId, customId){
-const size = document.getElementById(sizeId).value;
+const size = parseFloat(document.getElementById(sizeId).value);
 const qtySelect = document.getElementById(qtyId).value;
 const customQty = document.getElementById(customId).value;
 
-const qty = (qtySelect === "custom" && customQty) ? customQty : qtySelect;
+const qty = (qtySelect === "custom" && customQty) ? parseInt(customQty) : parseInt(qtySelect);
+
+const discount = getDiscount(qty);
+const total = (pricePerOz * size * qty) * (1 - discount);
 
 const msg = "DIABLITO\n\nOrder Request\n\n" +
 product + "\n" +
-"Size: " + size + "\n" +
+"Size: " + (size * 1) + " oz\n" +
 "Quantity: " + qty + "\n" +
+"Total: $" + total.toFixed(2) + "\n" +
 "Please confirm availability and total.\n\n";
 
 window.open("https://wa.me/526635130363?text=" + encodeURIComponent(msg));
