@@ -39,12 +39,10 @@ height:140px;
 object-fit:cover
 }
 
-.price{color:#ff4444;font-weight:bold}
-
 select{
 width:90%;
 margin:5px 0;
-padding:5px;
+padding:6px;
 }
 
 button{
@@ -68,9 +66,8 @@ font-weight:bold;
 <div class="trust">🚚 Same Day Delivery • 🔒 Discreet • ⭐ Trusted in Tijuana</div>
 </div>
 
-<!-- DAILY PROMO -->
 <div class="promo">
-🔥 TODAY ONLY: Buy 2 8ths GET DISCOUNT 🔥
+🔥 BUY MORE = BETTER DEALS 🔥
 </div>
 
 <div class="video">
@@ -81,74 +78,99 @@ font-weight:bold;
 
 <div class="products">
 
-<!-- PRODUCT 1 -->
+<!-- PRODUCT TEMPLATE -->
 <div class="card">
 <img src="strain1.jpg">
 <h3>Premium Strain 🔥</h3>
 
-<select id="q1">
+<select id="size1">
 <option value="1/8 oz">1/8 oz</option>
-<option value="2 x 1/8 oz">2 x 1/8 oz</option>
 <option value="1/2 oz">1/2 oz</option>
 <option value="1 oz">1 oz</option>
-<option value="2 oz">2 oz</option>
+<option value="1 lb">1 lb</option>
 </select>
 
-<button onclick="order('Premium Strain', 'q1')">
+<select id="qty1">
+<option value="1">Qty: 1</option>
+<option value="2">Qty: 2</option>
+<option value="3">Qty: 3</option>
+<option value="4">Qty: 4</option>
+<option value="5">Qty: 5</option>
+</select>
+
+<button onclick="order('Premium Strain','size1','qty1')">
 Order on WhatsApp
 </button>
 </div>
 
-<!-- PRODUCT 2 -->
 <div class="card">
 <img src="strain2.jpg">
 <h3>Exotic Strain 💨</h3>
 
-<select id="q2">
+<select id="size2">
 <option value="1/8 oz">1/8 oz</option>
-<option value="2 x 1/8 oz">2 x 1/8 oz</option>
 <option value="1/2 oz">1/2 oz</option>
 <option value="1 oz">1 oz</option>
-<option value="2 oz">2 oz</option>
+<option value="1 lb">1 lb</option>
 </select>
 
-<button onclick="order('Exotic Strain', 'q2')">
+<select id="qty2">
+<option value="1">Qty: 1</option>
+<option value="2">Qty: 2</option>
+<option value="3">Qty: 3</option>
+<option value="4">Qty: 4</option>
+<option value="5">Qty: 5</option>
+</select>
+
+<button onclick="order('Exotic Strain','size2','qty2')">
 Order on WhatsApp
 </button>
 </div>
 
-<!-- PRODUCT 3 -->
 <div class="card">
 <img src="strain3.jpg">
 <h3>Top Shelf Strain 🌿</h3>
 
-<select id="q3">
+<select id="size3">
 <option value="1/8 oz">1/8 oz</option>
-<option value="2 x 1/8 oz">2 x 1/8 oz</option>
 <option value="1/2 oz">1/2 oz</option>
 <option value="1 oz">1 oz</option>
-<option value="2 oz">2 oz</option>
+<option value="1 lb">1 lb</option>
 </select>
 
-<button onclick="order('Top Shelf Strain', 'q3')">
+<select id="qty3">
+<option value="1">Qty: 1</option>
+<option value="2">Qty: 2</option>
+<option value="3">Qty: 3</option>
+<option value="4">Qty: 4</option>
+<option value="5">Qty: 5</option>
+</select>
+
+<button onclick="order('Top Shelf Strain','size3','qty3')">
 Order on WhatsApp
 </button>
 </div>
 
-<!-- PRODUCT 4 -->
 <div class="card">
 <img src="allstrains.jpg">
 <h3>All Strains Pack</h3>
 
-<select id="q4">
+<select id="size4">
 <option value="1/8 oz">1/8 oz</option>
-<option value="2 x 1/8 oz">2 x 1/8 oz</option>
 <option value="1/2 oz">1/2 oz</option>
 <option value="1 oz">1 oz</option>
-<option value="2 oz">2 oz</option>
+<option value="1 lb">1 lb</option>
 </select>
 
-<button onclick="order('All Strains Pack', 'q4')">
+<select id="qty4">
+<option value="1">Qty: 1</option>
+<option value="2">Qty: 2</option>
+<option value="3">Qty: 3</option>
+<option value="4">Qty: 4</option>
+<option value="5">Qty: 5</option>
+</select>
+
+<button onclick="order('All Strains Pack','size4','qty4')">
 Order on WhatsApp
 </button>
 </div>
@@ -156,9 +178,17 @@ Order on WhatsApp
 </div>
 
 <script>
-function order(product, id){
-const qty=document.getElementById(id).value;
-const msg=encodeURIComponent("🔥 DIABLITO ORDER%0AProduct: "+product+"%0AQuantity: "+qty);
+function order(product, sizeId, qtyId){
+const size=document.getElementById(sizeId).value;
+const qty=document.getElementById(qtyId).value;
+
+const msg=encodeURIComponent(
+"🔥 DIABLITO ORDER%0AProduct: "+product+
+"%0ASize: "+size+
+"%0AQuantity: "+qty+
+"%0A%0A(Ask for bulk discount 🔥)"
+);
+
 window.open("https://wa.me/526635130363?text="+msg);
 }
 </script>
