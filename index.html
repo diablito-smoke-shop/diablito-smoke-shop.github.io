@@ -39,6 +39,12 @@ padding:6px;
 
 input{display:none;}
 
+.total{
+margin:5px 0;
+font-weight:bold;
+color:#25D366;
+}
+
 button{
 background:#25D366;
 color:#fff;
@@ -75,14 +81,14 @@ cursor:pointer;
 <img src="strain1.jpg">
 <h3>Premium Strain 🔥</h3>
 
-<select id="size1">
+<select id="size1" onchange="updateTotal(1)">
 <option value="0.125">1/8 oz</option>
 <option value="0.5">1/2 oz</option>
 <option value="1">1 oz</option>
 <option value="16">1 lb</option>
 </select>
 
-<select id="qty1" onchange="toggleCustomQty('qty1','custom1')">
+<select id="qty1" onchange="toggleCustomQty('qty1','custom1'); updateTotal(1)">
 <option value="1">Qty: 1</option>
 <option value="2">Qty: 2</option>
 <option value="3">Qty: 3</option>
@@ -91,7 +97,9 @@ cursor:pointer;
 <option value="custom">More...</option>
 </select>
 
-<input type="number" id="custom1" placeholder="Enter quantity">
+<input type="number" id="custom1" placeholder="Enter quantity" oninput="updateTotal(1)">
+
+<div class="total" id="total1">$0.00</div>
 
 <button onclick="order('Premium Strain','size1','qty1','custom1')">
 Order on WhatsApp
@@ -102,14 +110,14 @@ Order on WhatsApp
 <img src="strain2.jpg">
 <h3>Exotic Strain 💨</h3>
 
-<select id="size2">
+<select id="size2" onchange="updateTotal(2)">
 <option value="0.125">1/8 oz</option>
 <option value="0.5">1/2 oz</option>
 <option value="1">1 oz</option>
 <option value="16">1 lb</option>
 </select>
 
-<select id="qty2" onchange="toggleCustomQty('qty2','custom2')">
+<select id="qty2" onchange="toggleCustomQty('qty2','custom2'); updateTotal(2)">
 <option value="1">Qty: 1</option>
 <option value="2">Qty: 2</option>
 <option value="3">Qty: 3</option>
@@ -118,7 +126,9 @@ Order on WhatsApp
 <option value="custom">More...</option>
 </select>
 
-<input type="number" id="custom2" placeholder="Enter quantity">
+<input type="number" id="custom2" placeholder="Enter quantity" oninput="updateTotal(2)">
+
+<div class="total" id="total2">$0.00</div>
 
 <button onclick="order('Exotic Strain','size2','qty2','custom2')">
 Order on WhatsApp
@@ -129,14 +139,14 @@ Order on WhatsApp
 <img src="strain3.jpg">
 <h3>Top Shelf Strain 🌿</h3>
 
-<select id="size3">
+<select id="size3" onchange="updateTotal(3)">
 <option value="0.125">1/8 oz</option>
 <option value="0.5">1/2 oz</option>
 <option value="1">1 oz</option>
 <option value="16">1 lb</option>
 </select>
 
-<select id="qty3" onchange="toggleCustomQty('qty3','custom3')">
+<select id="qty3" onchange="toggleCustomQty('qty3','custom3'); updateTotal(3)">
 <option value="1">Qty: 1</option>
 <option value="2">Qty: 2</option>
 <option value="3">Qty: 3</option>
@@ -145,7 +155,9 @@ Order on WhatsApp
 <option value="custom">More...</option>
 </select>
 
-<input type="number" id="custom3" placeholder="Enter quantity">
+<input type="number" id="custom3" placeholder="Enter quantity" oninput="updateTotal(3)">
+
+<div class="total" id="total3">$0.00</div>
 
 <button onclick="order('Top Shelf Strain','size3','qty3','custom3')">
 Order on WhatsApp
@@ -156,14 +168,14 @@ Order on WhatsApp
 <img src="allstrains.jpg">
 <h3>All Strains Pack</h3>
 
-<select id="size4">
+<select id="size4" onchange="updateTotal(4)">
 <option value="0.125">1/8 oz</option>
 <option value="0.5">1/2 oz</option>
 <option value="1">1 oz</option>
 <option value="16">1 lb</option>
 </select>
 
-<select id="qty4" onchange="toggleCustomQty('qty4','custom4')">
+<select id="qty4" onchange="toggleCustomQty('qty4','custom4'); updateTotal(4)">
 <option value="1">Qty: 1</option>
 <option value="2">Qty: 2</option>
 <option value="3">Qty: 3</option>
@@ -172,7 +184,9 @@ Order on WhatsApp
 <option value="custom">More...</option>
 </select>
 
-<input type="number" id="custom4" placeholder="Enter quantity">
+<input type="number" id="custom4" placeholder="Enter quantity" oninput="updateTotal(4)">
+
+<div class="total" id="total4">$0.00</div>
 
 <button onclick="order('All Strains Pack','size4','qty4','custom4')">
 Order on WhatsApp
@@ -196,6 +210,20 @@ if(qty >= 5) return 0.10;
 return 0;
 }
 
+function getQty(qtyId, customId){
+const qtySelect = document.getElementById(qtyId).value;
+const customQty = document.getElementById(customId).value;
+return (qtySelect === "custom" && customQty) ? parseInt(customQty) : parseInt(qtySelect);
+}
+
+function updateTotal(id){
+const size = parseFloat(document.getElementById("size"+id).value);
+const qty = getQty("qty"+id,"custom"+id);
+const discount = getDiscount(qty);
+const total = (pricePerOz * size * qty) * (1 - discount);
+document.getElementById("total"+id).innerText = "$" + total.toFixed(2);
+}
+
 function sizeLabel(size){
 if(size == 0.125) return "1/8 oz";
 if(size == 0.5) return "1/2 oz";
@@ -206,11 +234,7 @@ return size + " oz";
 
 function order(product, sizeId, qtyId, customId){
 const size = parseFloat(document.getElementById(sizeId).value);
-const qtySelect = document.getElementById(qtyId).value;
-const customQty = document.getElementById(customId).value;
-
-const qty = (qtySelect === "custom" && customQty) ? parseInt(customQty) : parseInt(qtySelect);
-
+const qty = getQty(qtyId, customId);
 const discount = getDiscount(qty);
 const total = (pricePerOz * size * qty) * (1 - discount);
 
