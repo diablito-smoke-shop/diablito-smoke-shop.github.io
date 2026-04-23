@@ -11,6 +11,7 @@ body{margin:0;font-family:Arial;background:#050505;color:#fff;text-align:center}
 .trust{font-size:0.9rem;opacity:0.8;margin-bottom:10px}
 .video{padding:10px}
 .video video{width:90%;border-radius:10px}
+
 .promo{background:#ff1a1a;padding:10px;font-weight:bold;}
 
 .products{
@@ -37,17 +38,6 @@ padding:6px;
 }
 
 input{display:none;}
-
-.total{color:#25D366;font-weight:bold;margin:5px 0}
-
-.cartBar{
-position:fixed;
-bottom:0;
-width:100%;
-background:#000;
-border-top:1px solid #222;
-padding:10px;
-}
 
 button{
 background:#25D366;
@@ -81,19 +71,18 @@ cursor:pointer;
 
 <div class="products">
 
-<!-- PRODUCT 1 -->
 <div class="card">
 <img src="strain1.jpg">
 <h3>Premium Strain 🔥</h3>
 
-<select id="size1" onchange="updateItem(1)">
+<select id="size1">
 <option value="0.125">1/8 oz</option>
 <option value="0.5">1/2 oz</option>
 <option value="1">1 oz</option>
 <option value="16">1 lb</option>
 </select>
 
-<select id="qty1" onchange="toggleCustomQty('qty1','custom1'); updateItem(1)">
+<select id="qty1" onchange="toggleCustomQty('qty1','custom1')">
 <option value="1">Qty: 1</option>
 <option value="2">Qty: 2</option>
 <option value="3">Qty: 3</option>
@@ -102,28 +91,25 @@ cursor:pointer;
 <option value="custom">More...</option>
 </select>
 
-<input type="number" id="custom1" placeholder="Enter quantity" oninput="updateItem(1)">
+<input type="number" id="custom1" placeholder="Enter quantity">
 
-<div class="total" id="item1">$0.00</div>
-
-<button onclick="addToCart('Premium Strain','size1','qty1','custom1',1)">
-Add to Cart
+<button onclick="order('Premium Strain','size1','qty1','custom1')">
+Order on WhatsApp
 </button>
 </div>
 
-<!-- PRODUCT 2 -->
 <div class="card">
 <img src="strain2.jpg">
 <h3>Exotic Strain 💨</h3>
 
-<select id="size2" onchange="updateItem(2)">
+<select id="size2">
 <option value="0.125">1/8 oz</option>
 <option value="0.5">1/2 oz</option>
 <option value="1">1 oz</option>
 <option value="16">1 lb</option>
 </select>
 
-<select id="qty2" onchange="toggleCustomQty('qty2','custom2'); updateItem(2)">
+<select id="qty2" onchange="toggleCustomQty('qty2','custom2')">
 <option value="1">Qty: 1</option>
 <option value="2">Qty: 2</option>
 <option value="3">Qty: 3</option>
@@ -132,28 +118,25 @@ Add to Cart
 <option value="custom">More...</option>
 </select>
 
-<input type="number" id="custom2" placeholder="Enter quantity" oninput="updateItem(2)">
+<input type="number" id="custom2" placeholder="Enter quantity">
 
-<div class="total" id="item2">$0.00</div>
-
-<button onclick="addToCart('Exotic Strain','size2','qty2','custom2',2)">
-Add to Cart
+<button onclick="order('Exotic Strain','size2','qty2','custom2')">
+Order on WhatsApp
 </button>
 </div>
 
-<!-- PRODUCT 3 -->
 <div class="card">
 <img src="strain3.jpg">
 <h3>Top Shelf Strain 🌿</h3>
 
-<select id="size3" onchange="updateItem(3)">
+<select id="size3">
 <option value="0.125">1/8 oz</option>
 <option value="0.5">1/2 oz</option>
 <option value="1">1 oz</option>
 <option value="16">1 lb</option>
 </select>
 
-<select id="qty3" onchange="toggleCustomQty('qty3','custom3'); updateItem(3)">
+<select id="qty3" onchange="toggleCustomQty('qty3','custom3')">
 <option value="1">Qty: 1</option>
 <option value="2">Qty: 2</option>
 <option value="3">Qty: 3</option>
@@ -162,28 +145,25 @@ Add to Cart
 <option value="custom">More...</option>
 </select>
 
-<input type="number" id="custom3" placeholder="Enter quantity" oninput="updateItem(3)">
+<input type="number" id="custom3" placeholder="Enter quantity">
 
-<div class="total" id="item3">$0.00</div>
-
-<button onclick="addToCart('Top Shelf Strain','size3','qty3','custom3',3)">
-Add to Cart
+<button onclick="order('Top Shelf Strain','size3','qty3','custom3')">
+Order on WhatsApp
 </button>
 </div>
 
-<!-- PRODUCT 4 -->
 <div class="card">
 <img src="allstrains.jpg">
 <h3>All Strains Pack</h3>
 
-<select id="size4" onchange="updateItem(4)">
+<select id="size4">
 <option value="0.125">1/8 oz</option>
 <option value="0.5">1/2 oz</option>
 <option value="1">1 oz</option>
 <option value="16">1 lb</option>
 </select>
 
-<select id="qty4" onchange="toggleCustomQty('qty4','custom4'); updateItem(4)">
+<select id="qty4" onchange="toggleCustomQty('qty4','custom4')">
 <option value="1">Qty: 1</option>
 <option value="2">Qty: 2</option>
 <option value="3">Qty: 3</option>
@@ -192,87 +172,56 @@ Add to Cart
 <option value="custom">More...</option>
 </select>
 
-<input type="number" id="custom4" placeholder="Enter quantity" oninput="updateItem(4)">
+<input type="number" id="custom4" placeholder="Enter quantity">
 
-<div class="total" id="item4">$0.00</div>
-
-<button onclick="addToCart('All Strains Pack','size4','qty4','custom4',4)">
-Add to Cart
+<button onclick="order('All Strains Pack','size4','qty4','custom4')">
+Order on WhatsApp
 </button>
 </div>
 
 </div>
 
-<div class="cartBar">
-<div id="grandTotal">Total: $0.00</div>
-<button onclick="checkout()">Order on WhatsApp</button>
-</div>
-
 <script>
 const pricePerOz = 376.47;
-let cart = [];
 
 function toggleCustomQty(selectId, inputId){
-const s = document.getElementById(selectId);
-const i = document.getElementById(inputId);
-i.style.display = (s.value === "custom") ? "block" : "none";
+const select = document.getElementById(selectId);
+const input = document.getElementById(inputId);
+input.style.display = (select.value === "custom") ? "block" : "none";
 }
 
-function getDiscount(q){
-if(q>=10) return 0.20;
-if(q>=5) return 0.10;
+function getDiscount(qty){
+if(qty >= 10) return 0.20;
+if(qty >= 5) return 0.10;
 return 0;
 }
 
-function getQty(qid,cid){
-const q=document.getElementById(qid).value;
-const c=document.getElementById(cid).value;
-return (q==="custom" && c)?parseInt(c):parseInt(q);
+function sizeLabel(size){
+if(size == 0.125) return "1/8 oz";
+if(size == 0.5) return "1/2 oz";
+if(size == 1) return "1 oz";
+if(size == 16) return "1 lb";
+return size + " oz";
 }
 
-function sizeLabel(s){
-if(s==0.125) return "1/8 oz";
-if(s==0.5) return "1/2 oz";
-if(s==1) return "1 oz";
-if(s==16) return "1 lb";
-}
+function order(product, sizeId, qtyId, customId){
+const size = parseFloat(document.getElementById(sizeId).value);
+const qtySelect = document.getElementById(qtyId).value;
+const customQty = document.getElementById(customId).value;
 
-function updateItem(id){
-const size=parseFloat(document.getElementById("size"+id).value);
-const qty=getQty("qty"+id,"custom"+id);
-const disc=getDiscount(qty);
-const total=(pricePerOz*size*qty)*(1-disc);
-document.getElementById("item"+id).innerText="$"+total.toFixed(2);
-}
+const qty = (qtySelect === "custom" && customQty) ? parseInt(customQty) : parseInt(qtySelect);
 
-function addToCart(name,sid,qid,cid,id){
-const size=parseFloat(document.getElementById(sid).value);
-const qty=getQty(qid,cid);
-const disc=getDiscount(qty);
-const total=(pricePerOz*size*qty)*(1-disc);
+const discount = getDiscount(qty);
+const total = (pricePerOz * size * qty) * (1 - discount);
 
-cart.push({name,size:sizeLabel(size),qty,total});
-updateCart();
-}
+const msg = "DIABLITO\n\nOrder Request\n\n" +
+product + "\n" +
+"Size: " + sizeLabel(size) + "\n" +
+"Quantity: " + qty + "\n" +
+"Total: $" + total.toFixed(2) + "\n" +
+"Please confirm availability and total.\n\n";
 
-function updateCart(){
-let t=0;
-cart.forEach(i=>t+=i.total);
-document.getElementById("grandTotal").innerText="Total: $"+t.toFixed(2);
-}
-
-function checkout(){
-let msg="DIABLITO\n\nOrder Request\n\n";
-let t=0;
-
-cart.forEach(i=>{
-msg+=i.name+"\nSize: "+i.size+"\nQuantity: "+i.qty+"\nItem Total: $"+i.total.toFixed(2)+"\n\n";
-t+=i.total;
-});
-
-msg+="Grand Total: $"+t.toFixed(2)+"\nPlease confirm availability and total.\n\n";
-
-window.open("https://wa.me/526635130363?text="+encodeURIComponent(msg));
+window.open("https://wa.me/526635130363?text=" + encodeURIComponent(msg));
 }
 </script>
 
