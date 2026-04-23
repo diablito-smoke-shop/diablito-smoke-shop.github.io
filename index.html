@@ -63,43 +63,18 @@ cursor:pointer;
 
 <div class="products">
 
-<!-- REUSABLE PRODUCT BLOCK -->
-<script>
-const products = [
-{id:1,name:"Premium Strain 🔥",img:"strain1.jpg"},
-{id:2,name:"Exotic Strain 💨",img:"strain2.jpg"},
-{id:3,name:"Top Shelf Strain 🌿",img:"strain3.jpg"},
-{id:4,name:"All Strains Pack",img:"allstrains.jpg"}
-];
-</script>
-
-<div id="productContainer"></div>
-
-<script>
-const pricePerOz = 376.47;
-const minimumOrder = 50;
-
-const coupons = {
-"SAVE10":0.10,
-"VIP20":0.20
-};
-
-function renderProducts(){
-let html="";
-products.forEach(p=>{
-html+=`
 <div class="card">
-<img src="${p.img}">
-<h3>${p.name}</h3>
+<img src="strain1.jpg">
+<h3>Premium Strain 🔥</h3>
 
-<select id="size${p.id}" onchange="updateTotal(${p.id})">
+<select id="size1" onchange="updateTotal(1)">
 <option value="0.125">1/8 oz</option>
 <option value="0.5">1/2 oz</option>
 <option value="1">1 oz</option>
 <option value="16">1 lb</option>
 </select>
 
-<select id="qty${p.id}" onchange="toggleCustomQty('qty${p.id}','custom${p.id}'); updateTotal(${p.id})">
+<select id="qty1" onchange="toggleCustomQty('qty1','custom1'); updateTotal(1)">
 <option value="1">Qty: 1</option>
 <option value="2">Qty: 2</option>
 <option value="3">Qty: 3</option>
@@ -108,27 +83,116 @@ html+=`
 <option value="custom">More...</option>
 </select>
 
-<input type="number" id="custom${p.id}" placeholder="Enter quantity" oninput="updateTotal(${p.id})">
+<input type="number" id="custom1" placeholder="Enter quantity" oninput="updateTotal(1)">
+<input type="text" id="coupon1" placeholder="Coupon Code (optional)" oninput="updateTotal(1)">
 
-<input type="text" id="coupon${p.id}" placeholder="Coupon Code (optional)" oninput="updateTotal(${p.id})">
+<div class="price" id="total1">$0.00</div>
+<div class="savings" id="save1"></div>
+<div class="upsell" id="upsell1"></div>
 
-<div class="price" id="total${p.id}">$0.00</div>
-<div class="savings" id="save${p.id}"></div>
-<div class="upsell" id="upsell${p.id}"></div>
-
-<button onclick="order('${p.name}','size${p.id}','qty${p.id}','custom${p.id}','coupon${p.id}')">
-Order on WhatsApp
-</button>
+<button onclick="order('Premium Strain','size1','qty1','custom1','coupon1')">Order on WhatsApp</button>
 </div>
-`;
-});
-document.getElementById("productContainer").innerHTML=html;
-}
 
-function toggleCustomQty(selectId,inputId){
-const s=document.getElementById(selectId);
-const i=document.getElementById(inputId);
-i.style.display=(s.value==="custom")?"block":"none";
+<div class="card">
+<img src="strain2.jpg">
+<h3>Exotic Strain 💨</h3>
+
+<select id="size2" onchange="updateTotal(2)">
+<option value="0.125">1/8 oz</option>
+<option value="0.5">1/2 oz</option>
+<option value="1">1 oz</option>
+<option value="16">1 lb</option>
+</select>
+
+<select id="qty2" onchange="toggleCustomQty('qty2','custom2'); updateTotal(2)">
+<option value="1">Qty: 1</option>
+<option value="2">Qty: 2</option>
+<option value="3">Qty: 3</option>
+<option value="4">Qty: 4</option>
+<option value="5">Qty: 5</option>
+<option value="custom">More...</option>
+</select>
+
+<input type="number" id="custom2" placeholder="Enter quantity" oninput="updateTotal(2)">
+<input type="text" id="coupon2" placeholder="Coupon Code (optional)" oninput="updateTotal(2)">
+
+<div class="price" id="total2">$0.00</div>
+<div class="savings" id="save2"></div>
+<div class="upsell" id="upsell2"></div>
+
+<button onclick="order('Exotic Strain','size2','qty2','custom2','coupon2')">Order on WhatsApp</button>
+</div>
+
+<div class="card">
+<img src="strain3.jpg">
+<h3>Top Shelf Strain 🌿</h3>
+
+<select id="size3" onchange="updateTotal(3)">
+<option value="0.125">1/8 oz</option>
+<option value="0.5">1/2 oz</option>
+<option value="1">1 oz</option>
+<option value="16">1 lb</option>
+</select>
+
+<select id="qty3" onchange="toggleCustomQty('qty3','custom3'); updateTotal(3)">
+<option value="1">Qty: 1</option>
+<option value="2">Qty: 2</option>
+<option value="3">Qty: 3</option>
+<option value="4">Qty: 4</option>
+<option value="5">Qty: 5</option>
+<option value="custom">More...</option>
+</select>
+
+<input type="number" id="custom3" placeholder="Enter quantity" oninput="updateTotal(3)">
+<input type="text" id="coupon3" placeholder="Coupon Code (optional)" oninput="updateTotal(3)">
+
+<div class="price" id="total3">$0.00</div>
+<div class="savings" id="save3"></div>
+<div class="upsell" id="upsell3"></div>
+
+<button onclick="order('Top Shelf Strain','size3','qty3','custom3','coupon3')">Order on WhatsApp</button>
+</div>
+
+<div class="card">
+<img src="allstrains.jpg">
+<h3>All Strains Pack</h3>
+
+<select id="size4" onchange="updateTotal(4)">
+<option value="0.125">1/8 oz</option>
+<option value="0.5">1/2 oz</option>
+<option value="1">1 oz</option>
+<option value="16">1 lb</option>
+</select>
+
+<select id="qty4" onchange="toggleCustomQty('qty4','custom4'); updateTotal(4)">
+<option value="1">Qty: 1</option>
+<option value="2">Qty: 2</option>
+<option value="3">Qty: 3</option>
+<option value="4">Qty: 4</option>
+<option value="5">Qty: 5</option>
+<option value="custom">More...</option>
+</select>
+
+<input type="number" id="custom4" placeholder="Enter quantity" oninput="updateTotal(4)">
+<input type="text" id="coupon4" placeholder="Coupon Code (optional)" oninput="updateTotal(4)">
+
+<div class="price" id="total4">$0.00</div>
+<div class="savings" id="save4"></div>
+<div class="upsell" id="upsell4"></div>
+
+<button onclick="order('All Strains Pack','size4','qty4','custom4','coupon4')">Order on WhatsApp</button>
+</div>
+
+</div>
+
+<script>
+const pricePerOz=376.47;
+const minimumOrder=50;
+
+const coupons={"SAVE10":0.10,"VIP20":0.20};
+
+function toggleCustomQty(s,i){
+document.getElementById(i).style.display=(document.getElementById(s).value==="custom")?"block":"none";
 }
 
 function getQty(q,c){
@@ -157,9 +221,7 @@ const total=base*(1-getDiscount(qty))*(1-getCoupon(coupon));
 const saved=base-total;
 
 document.getElementById("total"+id).innerText="$"+total.toFixed(2);
-
-document.getElementById("save"+id).innerText=
-(saved>0)?"You saved $"+saved.toFixed(2):"";
+document.getElementById("save"+id).innerText=(saved>0)?"You saved $"+saved.toFixed(2):"";
 
 if(qty<5){
 document.getElementById("upsell"+id).innerText="Add "+(5-qty)+" more for 10% off";
@@ -204,8 +266,6 @@ Please confirm availability and total.
 
 window.open("https://wa.me/526635130363?text="+encodeURIComponent(msg));
 }
-
-renderProducts();
 </script>
 
 </body>
