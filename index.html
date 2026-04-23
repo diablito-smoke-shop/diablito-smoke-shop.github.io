@@ -40,9 +40,9 @@ padding:6px;
 input{display:none;}
 
 .total{
-font-weight:bold;
+font-size:0.9rem;
 margin:5px 0;
-color:#25D366;
+color:#00ffcc;
 }
 
 button{
@@ -77,7 +77,6 @@ cursor:pointer;
 
 <div class="products">
 
-<!-- PRODUCT 1 -->
 <div class="card">
 <img src="strain1.jpg">
 <h3>Premium Strain 🔥</h3>
@@ -89,7 +88,8 @@ cursor:pointer;
 <option value="16">1 lb</option>
 </select>
 
-<select id="qty1" onchange="toggleCustomQty('qty1','custom1'); updateTotal('size1','qty1','custom1','total1')">
+<select id="qty1" onchange="toggleCustomQty('qty1','custom1');updateTotal('size1','qty1','custom1','total1')">
+<option value="0">Qty: 0</option>
 <option value="1">Qty: 1</option>
 <option value="2">Qty: 2</option>
 <option value="3">Qty: 3</option>
@@ -100,14 +100,15 @@ cursor:pointer;
 
 <input type="number" id="custom1" placeholder="Enter quantity" oninput="updateTotal('size1','qty1','custom1','total1')">
 
-<div id="total1" class="total">$47.06</div>
+<div class="total" id="total1">$0.00</div>
 
 <button onclick="order('Premium Strain','size1','qty1','custom1')">
 Order on WhatsApp
 </button>
 </div>
 
-<!-- PRODUCT 2 -->
+<!-- COPY SAME STRUCTURE -->
+
 <div class="card">
 <img src="strain2.jpg">
 <h3>Exotic Strain 💨</h3>
@@ -119,7 +120,8 @@ Order on WhatsApp
 <option value="16">1 lb</option>
 </select>
 
-<select id="qty2" onchange="toggleCustomQty('qty2','custom2'); updateTotal('size2','qty2','custom2','total2')">
+<select id="qty2" onchange="toggleCustomQty('qty2','custom2');updateTotal('size2','qty2','custom2','total2')">
+<option value="0">Qty: 0</option>
 <option value="1">Qty: 1</option>
 <option value="2">Qty: 2</option>
 <option value="3">Qty: 3</option>
@@ -130,14 +132,13 @@ Order on WhatsApp
 
 <input type="number" id="custom2" placeholder="Enter quantity" oninput="updateTotal('size2','qty2','custom2','total2')">
 
-<div id="total2" class="total">$47.06</div>
+<div class="total" id="total2">$0.00</div>
 
 <button onclick="order('Exotic Strain','size2','qty2','custom2')">
 Order on WhatsApp
 </button>
 </div>
 
-<!-- PRODUCT 3 -->
 <div class="card">
 <img src="strain3.jpg">
 <h3>Top Shelf Strain 🌿</h3>
@@ -149,7 +150,8 @@ Order on WhatsApp
 <option value="16">1 lb</option>
 </select>
 
-<select id="qty3" onchange="toggleCustomQty('qty3','custom3'); updateTotal('size3','qty3','custom3','total3')">
+<select id="qty3" onchange="toggleCustomQty('qty3','custom3');updateTotal('size3','qty3','custom3','total3')">
+<option value="0">Qty: 0</option>
 <option value="1">Qty: 1</option>
 <option value="2">Qty: 2</option>
 <option value="3">Qty: 3</option>
@@ -160,14 +162,13 @@ Order on WhatsApp
 
 <input type="number" id="custom3" placeholder="Enter quantity" oninput="updateTotal('size3','qty3','custom3','total3')">
 
-<div id="total3" class="total">$47.06</div>
+<div class="total" id="total3">$0.00</div>
 
 <button onclick="order('Top Shelf Strain','size3','qty3','custom3')">
 Order on WhatsApp
 </button>
 </div>
 
-<!-- PRODUCT 4 -->
 <div class="card">
 <img src="allstrains.jpg">
 <h3>All Strains Pack</h3>
@@ -179,7 +180,8 @@ Order on WhatsApp
 <option value="16">1 lb</option>
 </select>
 
-<select id="qty4" onchange="toggleCustomQty('qty4','custom4'); updateTotal('size4','qty4','custom4','total4')">
+<select id="qty4" onchange="toggleCustomQty('qty4','custom4');updateTotal('size4','qty4','custom4','total4')">
+<option value="0">Qty: 0</option>
 <option value="1">Qty: 1</option>
 <option value="2">Qty: 2</option>
 <option value="3">Qty: 3</option>
@@ -190,7 +192,7 @@ Order on WhatsApp
 
 <input type="number" id="custom4" placeholder="Enter quantity" oninput="updateTotal('size4','qty4','custom4','total4')">
 
-<div id="total4" class="total">$47.06</div>
+<div class="total" id="total4">$0.00</div>
 
 <button onclick="order('All Strains Pack','size4','qty4','custom4')">
 Order on WhatsApp
@@ -209,15 +211,17 @@ input.style.display = (select.value === "custom") ? "block" : "none";
 }
 
 function getQty(qtyId, customId){
-const q = document.getElementById(qtyId).value;
-const c = document.getElementById(customId).value;
-return (q === "custom") ? (c ? Number(c) : 1) : Number(q);
+const qtySelect = document.getElementById(qtyId).value;
+const customQty = document.getElementById(customId).value;
+return (qtySelect === "custom" && customQty) ? parseInt(customQty) : parseInt(qtySelect);
 }
 
 function updateTotal(sizeId, qtyId, customId, totalId){
-const size = Number(document.getElementById(sizeId).value);
-const qty = getQty(qtyId, customId);
+const size = parseFloat(document.getElementById(sizeId).value);
+const qty = getQty(qtyId, customId) || 0;
+
 const total = pricePerOz * size * qty;
+
 document.getElementById(totalId).innerText = "$" + total.toFixed(2);
 }
 
@@ -230,8 +234,9 @@ return size + " oz";
 }
 
 function order(product, sizeId, qtyId, customId){
-const size = Number(document.getElementById(sizeId).value);
+const size = parseFloat(document.getElementById(sizeId).value);
 const qty = getQty(qtyId, customId);
+
 const total = pricePerOz * size * qty;
 
 const msg = "DIABLITO\n\nOrder Request\n\n" +
@@ -242,14 +247,6 @@ product + "\n" +
 "Please confirm availability and total.\n\n";
 
 window.open("https://wa.me/526635130363?text=" + encodeURIComponent(msg));
-}
-
-// ✅ INIT totals on load (THIS WAS MISSING BEFORE)
-window.onload = function(){
-updateTotal('size1','qty1','custom1','total1');
-updateTotal('size2','qty2','custom2','total2');
-updateTotal('size3','qty3','custom3','total3');
-updateTotal('size4','qty4','custom4','total4');
 }
 </script>
 
