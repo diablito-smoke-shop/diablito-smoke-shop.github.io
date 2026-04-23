@@ -9,38 +9,13 @@ body{margin:0;font-family:Arial;background:#050505;color:#fff;text-align:center}
 .hero{padding:30px}
 .hero h1{text-shadow:0 0 15px red}
 .trust{font-size:0.9rem;opacity:0.8;margin-bottom:10px}
-
-/* VIDEO */
 .video{padding:10px}
 .video video{width:90%;border-radius:10px}
-
-/* PRODUCTS */
-.products{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
-  gap:12px;
-  padding:15px
-}
-.card{
-  background:#111;
-  border-radius:10px;
-  overflow:hidden;
-  box-shadow:0 0 10px rgba(255,0,0,0.3)
-}
-.card img{
-  width:100%;
-  height:140px;
-  object-fit:cover
-}
+.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;padding:15px}
+.card{background:#111;border-radius:10px;overflow:hidden;box-shadow:0 0 10px rgba(255,0,0,0.3)}
+.card img{width:100%;height:140px;object-fit:cover}
 .price{color:#ff4444;font-weight:bold}
-button{
-  background:#25D366;
-  color:#fff;
-  border:none;
-  padding:10px;
-  width:100%;
-  font-weight:bold;
-}
+button{background:#25D366;color:#fff;border:none;padding:10px;width:100%;font-weight:bold}
 </style>
 </head>
 
@@ -54,10 +29,10 @@ button{
 <div class="trust">🚚 Same Day Delivery • 🔒 Discreet • ⭐ Trusted in Tijuana</div>
 </div>
 
-<!-- VIDEO -->
+<!-- VIDEO (FORCED PATH) -->
 <div class="video">
 <video controls>
-<source src="video.mp4" type="video/mp4">
+<source src="https://diablito-smoke-shop.github.io/video.mp4" type="video/mp4">
 </video>
 </div>
 
@@ -66,12 +41,12 @@ button{
 <script>
 const PHONE="521XXXXXXXXXX";
 
-/* USING YOUR REAL IMAGE */
+/* FORCED IMAGE PATH */
 const products=[
-{name:"Premium Strain 🔥",price:200,img:"strain1.jpg"},
-{name:"Metal Grinder Premium",price:180,img:"strain1.jpg"},
-{name:"RAW Rolling Papers",price:40,img:"strain1.jpg"},
-{name:"Clipper Lighter Pack",price:120,img:"strain1.jpg"}
+{name:"Premium Strain 🔥",price:200,img:"https://diablito-smoke-shop.github.io/strain1.jpg"},
+{name:"Metal Grinder Premium",price:180,img:"https://diablito-smoke-shop.github.io/strain1.jpg"},
+{name:"RAW Rolling Papers",price:40,img:"https://diablito-smoke-shop.github.io/strain1.jpg"},
+{name:"Clipper Lighter Pack",price:120,img:"https://diablito-smoke-shop.github.io/strain1.jpg"}
 ];
 
 const el=document.getElementById('products');
