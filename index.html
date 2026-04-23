@@ -9,6 +9,10 @@ body{margin:0;font-family:Arial;background:#050505;color:#fff;text-align:center}
 .hero{padding:30px}
 .hero h1{text-shadow:0 0 15px red}
 .trust{font-size:0.9rem;opacity:0.8;margin-bottom:10px}
+.video{padding:10px}
+.video video{width:90%;border-radius:10px}
+
+.promo{background:#ff1a1a;padding:10px;font-weight:bold;}
 
 .products{
 display:grid;
@@ -20,6 +24,7 @@ padding:15px
 .card{
 background:#111;
 border-radius:10px;
+overflow:hidden;
 box-shadow:0 0 10px rgba(255,0,0,0.3);
 padding-bottom:10px;
 }
@@ -58,11 +63,20 @@ cursor:pointer;
 <div class="hero">
 <h1>Premium Smoke Experience</h1>
 <p>Order instantly via WhatsApp</p>
-<div class="trust">Same Day Delivery • Discreet • Trusted</div>
+<div class="trust">🚚 Same Day Delivery • 🔒 Discreet • ⭐ Trusted in Tijuana</div>
+</div>
+
+<div class="promo">🔥 BUY MORE = BETTER DEALS 🔥</div>
+
+<div class="video">
+<video controls>
+<source src="GrowHub.mp4" type="video/mp4">
+</video>
 </div>
 
 <div class="products">
 
+<!-- PRODUCT 1 -->
 <div class="card">
 <img src="strain1.jpg">
 <h3>Premium Strain 🔥</h3>
@@ -93,6 +107,7 @@ cursor:pointer;
 <button onclick="order('Premium Strain','size1','qty1','custom1','coupon1')">Order on WhatsApp</button>
 </div>
 
+<!-- PRODUCT 2 -->
 <div class="card">
 <img src="strain2.jpg">
 <h3>Exotic Strain 💨</h3>
@@ -123,6 +138,7 @@ cursor:pointer;
 <button onclick="order('Exotic Strain','size2','qty2','custom2','coupon2')">Order on WhatsApp</button>
 </div>
 
+<!-- PRODUCT 3 -->
 <div class="card">
 <img src="strain3.jpg">
 <h3>Top Shelf Strain 🌿</h3>
@@ -153,6 +169,7 @@ cursor:pointer;
 <button onclick="order('Top Shelf Strain','size3','qty3','custom3','coupon3')">Order on WhatsApp</button>
 </div>
 
+<!-- PRODUCT 4 -->
 <div class="card">
 <img src="allstrains.jpg">
 <h3>All Strains Pack</h3>
@@ -188,7 +205,6 @@ cursor:pointer;
 <script>
 const pricePerOz=376.47;
 const minimumOrder=50;
-
 const coupons={"SAVE10":0.10,"VIP20":0.20};
 
 function toggleCustomQty(s,i){
