@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{margin:0;font-family:Arial;background:#050505;color:#fff;text-align:center}
+.header{background:#000;padding:15px;border-bottom:1px solid #222}
+.logo{font-size:1.8rem;color:#ff1a1a}
+.hero{padding:30px}
+.hero h1{text-shadow:0 0 15px red}
+.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;padding:15px}
+.card{background:#111;border-radius:10px;overflow:hidden}
+.card img{width:100%;height:140px;object-fit:cover}
+.price{color:#ff4444}
+button{background:red;color:#fff;border:none;padding:10px;width:100%}
+</style>
+</head>
+<body>
+
+<div class="header"><div class="logo">🔥 DIABLITO</div></div>
+
+<div class="hero">
+<h1>Premium Smoke Experience</h1>
+<p>Fast • Trusted • Direct</p>
+</div>
+
+<div id="products" class="products"></div>
+
+<script>
+const PHONE="5210000000000";
+
+const products=[
+{name:"Glass Pipe",price:25,img:"https://images.unsplash.com/photo-1600180758890-6b94519a8ba6"},
+{name:"Grinder",price:15,img:"https://images.unsplash.com/photo-1585238342024-78d387f4a707"},
+{name:"Rolling Papers",price:5,img:"https://images.unsplash.com/photo-1600180758844-2c6b4f1e3c76"},
+{name:"Lighter Pack",price:10,img:"https://images.unsplash.com/photo-1597086766527-9f1c2f6f6c94"}
+];
+
+const el=document.getElementById('products');
+
+products.forEach(p=>{
+el.innerHTML+=`
+<div class='card'>
+<img src="\${p.img}">
+<h3>\${p.name}</h3>
+<div class="price">$ \${p.price}</div>
+<button onclick="order('\${p.name}',\${p.price})">Order Now</button>
+</div>`;
+});
+
+function order(name,price){
+const msg=encodeURIComponent("Order: "+name+" $"+price);
+window.open("https://wa.me/"+PHONE+"?text="+msg);
+}
+</script>
+
+</body>
+</html>
