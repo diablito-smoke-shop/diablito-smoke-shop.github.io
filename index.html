@@ -39,10 +39,14 @@ height:140px;
 object-fit:cover
 }
 
-select{
+select, input{
 width:90%;
 margin:5px 0;
 padding:6px;
+}
+
+input{
+display:none;
 }
 
 button{
@@ -52,6 +56,7 @@ border:none;
 padding:10px;
 width:90%;
 font-weight:bold;
+cursor:pointer;
 }
 </style>
 </head>
@@ -78,6 +83,7 @@ font-weight:bold;
 
 <div class="products">
 
+<!-- PRODUCT 1 -->
 <div class="card">
 <img src="strain1.jpg">
 <h3>Premium Strain 🔥</h3>
@@ -89,19 +95,23 @@ font-weight:bold;
 <option value="1 lb">1 lb</option>
 </select>
 
-<select id="qty1">
+<select id="qty1" onchange="toggleCustomQty('qty1','custom1')">
 <option value="1">Qty: 1</option>
 <option value="2">Qty: 2</option>
 <option value="3">Qty: 3</option>
 <option value="4">Qty: 4</option>
 <option value="5">Qty: 5</option>
+<option value="custom">More...</option>
 </select>
 
-<button onclick="order('Premium Strain','size1','qty1')">
+<input type="number" id="custom1" placeholder="Enter quantity">
+
+<button onclick="order('Premium Strain','size1','qty1','custom1')">
 Order on WhatsApp
 </button>
 </div>
 
+<!-- PRODUCT 2 -->
 <div class="card">
 <img src="strain2.jpg">
 <h3>Exotic Strain 💨</h3>
@@ -113,19 +123,23 @@ Order on WhatsApp
 <option value="1 lb">1 lb</option>
 </select>
 
-<select id="qty2">
+<select id="qty2" onchange="toggleCustomQty('qty2','custom2')">
 <option value="1">Qty: 1</option>
 <option value="2">Qty: 2</option>
 <option value="3">Qty: 3</option>
 <option value="4">Qty: 4</option>
 <option value="5">Qty: 5</option>
+<option value="custom">More...</option>
 </select>
 
-<button onclick="order('Exotic Strain','size2','qty2')">
+<input type="number" id="custom2" placeholder="Enter quantity">
+
+<button onclick="order('Exotic Strain','size2','qty2','custom2')">
 Order on WhatsApp
 </button>
 </div>
 
+<!-- PRODUCT 3 -->
 <div class="card">
 <img src="strain3.jpg">
 <h3>Top Shelf Strain 🌿</h3>
@@ -137,19 +151,23 @@ Order on WhatsApp
 <option value="1 lb">1 lb</option>
 </select>
 
-<select id="qty3">
+<select id="qty3" onchange="toggleCustomQty('qty3','custom3')">
 <option value="1">Qty: 1</option>
 <option value="2">Qty: 2</option>
 <option value="3">Qty: 3</option>
 <option value="4">Qty: 4</option>
 <option value="5">Qty: 5</option>
+<option value="custom">More...</option>
 </select>
 
-<button onclick="order('Top Shelf Strain','size3','qty3')">
+<input type="number" id="custom3" placeholder="Enter quantity">
+
+<button onclick="order('Top Shelf Strain','size3','qty3','custom3')">
 Order on WhatsApp
 </button>
 </div>
 
+<!-- PRODUCT 4 -->
 <div class="card">
 <img src="allstrains.jpg">
 <h3>All Strains Pack</h3>
@@ -161,15 +179,18 @@ Order on WhatsApp
 <option value="1 lb">1 lb</option>
 </select>
 
-<select id="qty4">
+<select id="qty4" onchange="toggleCustomQty('qty4','custom4')">
 <option value="1">Qty: 1</option>
 <option value="2">Qty: 2</option>
 <option value="3">Qty: 3</option>
 <option value="4">Qty: 4</option>
 <option value="5">Qty: 5</option>
+<option value="custom">More...</option>
 </select>
 
-<button onclick="order('All Strains Pack','size4','qty4')">
+<input type="number" id="custom4" placeholder="Enter quantity">
+
+<button onclick="order('All Strains Pack','size4','qty4','custom4')">
 Order on WhatsApp
 </button>
 </div>
@@ -177,23 +198,31 @@ Order on WhatsApp
 </div>
 
 <script>
-function order(product, sizeId, qtyId){
-const size=document.getElementById(sizeId).value;
-const qty=document.getElementById(qtyId).value;
+function toggleCustomQty(selectId, inputId){
+const select = document.getElementById(selectId);
+const input = document.getElementById(inputId);
 
-const msg = `DIABLITO
+if(select.value === "custom"){
+input.style.display = "block";
+}else{
+input.style.display = "none";
+}
+}
 
-Order Request
+function order(product, sizeId, qtyId, customId){
+const size = document.getElementById(sizeId).value;
+const qtySelect = document.getElementById(qtyId).value;
+const customQty = document.getElementById(customId).value;
 
-${product}
-Size: ${size}
-Quantity: ${qty}
+const qty = (qtySelect === "custom" && customQty) ? customQty : qtySelect;
 
-Please confirm availability and total.
+const msg = "DIABLITO\n\nOrder Request\n\n" +
+product + "\n" +
+"Size: " + size + "\n" +
+"Quantity: " + qty + "\n" +
+"Please confirm availability and total.\n\n";
 
-`;
-
-window.open("https://wa.me/526635130363?text="+encodeURIComponent(msg));
+window.open("https://wa.me/526635130363?text=" + encodeURIComponent(msg));
 }
 </script>
 
