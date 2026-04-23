@@ -52,22 +52,23 @@ border:none;
 padding:10px;
 width:90%;
 font-weight:bold;
+cursor:pointer;
 }
 </style>
 </head>
 
 <body>
 
-<div class="header"><div class="logo">🔥 DIABLITO</div></div>
+<div class="header"><div class="logo">DIABLITO</div></div>
 
 <div class="hero">
 <h1>Premium Smoke Experience</h1>
 <p>Order instantly via WhatsApp</p>
-<div class="trust">🚚 Same Day Delivery • 🔒 Discreet • ⭐ Trusted in Tijuana</div>
+<div class="trust">Same Day Delivery • Discreet • Trusted in Tijuana</div>
 </div>
 
 <div class="promo">
-🔥 BUY MORE = BETTER DEALS 🔥
+BUY MORE = BETTER DEALS
 </div>
 
 <div class="video">
@@ -78,10 +79,9 @@ font-weight:bold;
 
 <div class="products">
 
-<!-- PRODUCT TEMPLATE -->
 <div class="card">
 <img src="strain1.jpg">
-<h3>Premium Strain 🔥</h3>
+<h3>Premium Strain</h3>
 
 <select id="size1">
 <option value="1/8 oz">1/8 oz</option>
@@ -105,7 +105,7 @@ Order on WhatsApp
 
 <div class="card">
 <img src="strain2.jpg">
-<h3>Exotic Strain 💨</h3>
+<h3>Exotic Strain</h3>
 
 <select id="size2">
 <option value="1/8 oz">1/8 oz</option>
@@ -129,7 +129,7 @@ Order on WhatsApp
 
 <div class="card">
 <img src="strain3.jpg">
-<h3>Top Shelf Strain 🌿</h3>
+<h3>Top Shelf Strain</h3>
 
 <select id="size3">
 <option value="1/8 oz">1/8 oz</option>
@@ -179,17 +179,24 @@ Order on WhatsApp
 
 <script>
 function order(product, sizeId, qtyId){
-const size=document.getElementById(sizeId).value;
-const qty=document.getElementById(qtyId).value;
+const size = document.getElementById(sizeId).value;
+const qty = document.getElementById(qtyId).value;
 
-const msg=encodeURIComponent(
-"🔥 DIABLITO ORDER%0AProduct: "+product+
-"%0ASize: "+size+
-"%0AQuantity: "+qty+
-"%0A%0A(Ask for bulk discount 🔥)"
-);
+const message = `DIABLITO
 
-window.open("https://wa.me/526635130363?text="+msg);
+Order Request
+
+Product: ${product}
+Size: ${size}
+Quantity: ${qty}
+
+Please confirm availability and total.
+
+`;
+
+const url = "https://wa.me/526635130363?text=" + encodeURIComponent(message);
+
+window.open(url);
 }
 </script>
 
