@@ -8,10 +8,11 @@ body{margin:0;font-family:Arial;background:#050505;color:#fff;text-align:center}
 .logo{font-size:1.8rem;color:#ff1a1a}
 .hero{padding:30px}
 .hero h1{text-shadow:0 0 15px red}
+.trust{font-size:0.9rem;opacity:0.8;margin-bottom:10px}
 .products{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;padding:15px}
-.card{background:#111;border-radius:10px;overflow:hidden}
+.card{background:#111;border-radius:10px;overflow:hidden;box-shadow:0 0 10px rgba(255,0,0,0.3)}
 .card img{width:100%;height:140px;object-fit:cover}
-.price{color:#ff4444}
+.price{color:#ff4444;font-weight:bold}
 button{background:red;color:#fff;border:none;padding:10px;width:100%}
 </style>
 </head>
@@ -22,18 +23,19 @@ button{background:red;color:#fff;border:none;padding:10px;width:100%}
 <div class="hero">
 <h1>Premium Smoke Experience</h1>
 <p>Fast • Trusted • Direct</p>
+<div class="trust">🚚 Same Day Delivery • 🔒 Discreet • ⭐ Trusted in Tijuana</div>
 </div>
 
 <div id="products" class="products"></div>
 
 <script>
-const PHONE=""(663) 513-0363";
+const PHONE="521XXXXXXXXXX";
 
 const products=[
-{name:"Glass Pipe",price:25,img:"https://images.unsplash.com/photo-1600180758890-6b94519a8ba6"},
-{name:"Grinder",price:15,img:"https://images.unsplash.com/photo-1585238342024-78d387f4a707"},
-{name:"Rolling Papers",price:5,img:"https://images.unsplash.com/photo-1600180758844-2c6b4f1e3c76"},
-{name:"Lighter Pack",price:10,img:"https://images.unsplash.com/photo-1597086766527-9f1c2f6f6c94"}
+{name:"10” Glass Bong",price:350,img:"https://images.unsplash.com/photo-1600180758890-6b94519a8ba6"},
+{name:"Metal Grinder Premium",price:180,img:"https://images.unsplash.com/photo-1585238342024-78d387f4a707"},
+{name:"RAW Rolling Papers",price:40,img:"https://images.unsplash.com/photo-1600180758844-2c6b4f1e3c76"},
+{name:"Clipper Lighter Pack",price:120,img:"https://images.unsplash.com/photo-1597086766527-9f1c2f6f6c94"}
 ];
 
 const el=document.getElementById('products');
@@ -49,7 +51,7 @@ el.innerHTML+=`
 });
 
 function order(name,price){
-const msg=encodeURIComponent("Order: "+name+" $"+price);
+const msg=encodeURIComponent("🔥 DIABLITO ORDER%0AProduct: "+name+"%0APrice: $"+price);
 window.open("https://wa.me/"+PHONE+"?text="+msg);
 }
 </script>
