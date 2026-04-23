@@ -8,14 +8,14 @@ if(qty==="more"){
 qty=document.getElementById(customId).value || "Not specified";
 }
 
-let message =
+const message =
 "🔥 DIABLITO ORDER\n\n" +
 "Product: " + product + "\n" +
 "Size: " + size + "\n" +
 "Quantity: " + qty + "\n\n" +
 "Do you deliver? 🚚";
 
-let url = "https://wa.me/526635130363?text=" + encodeURIComponent(message);
+const url = "https://wa.me/526635130363?text=" + encodeURIComponent(message);
 
 window.open(url, "_blank");
 }
