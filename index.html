@@ -39,12 +39,6 @@ padding:6px;
 
 input{display:none;}
 
-.total{
-margin-top:6px;
-color:#25D366;
-font-weight:bold;
-}
-
 button{
 background:#25D366;
 color:#fff;
@@ -77,19 +71,18 @@ cursor:pointer;
 
 <div class="products">
 
-<!-- PRODUCT 1 -->
 <div class="card">
 <img src="strain1.jpg">
 <h3>Premium Strain 🔥</h3>
 
-<select id="size1" onchange="updateTotal('size1','qty1','custom1','total1')">
+<select id="size1">
 <option value="0.125">1/8 oz</option>
 <option value="0.5">1/2 oz</option>
 <option value="1">1 oz</option>
 <option value="16">1 lb</option>
 </select>
 
-<select id="qty1" onchange="toggleCustomQty('qty1','custom1'); updateTotal('size1','qty1','custom1','total1')">
+<select id="qty1" onchange="toggleCustomQty('qty1','custom1')">
 <option value="1">Qty: 1</option>
 <option value="2">Qty: 2</option>
 <option value="3">Qty: 3</option>
@@ -98,28 +91,25 @@ cursor:pointer;
 <option value="custom">More...</option>
 </select>
 
-<input type="number" id="custom1" placeholder="Enter quantity" oninput="updateTotal('size1','qty1','custom1','total1')">
-
-<div id="total1" class="total">$0.00</div>
+<input type="number" id="custom1" placeholder="Enter quantity">
 
 <button onclick="order('Premium Strain','size1','qty1','custom1')">
 Order on WhatsApp
 </button>
 </div>
 
-<!-- PRODUCT 2 -->
 <div class="card">
 <img src="strain2.jpg">
 <h3>Exotic Strain 💨</h3>
 
-<select id="size2" onchange="updateTotal('size2','qty2','custom2','total2')">
+<select id="size2">
 <option value="0.125">1/8 oz</option>
 <option value="0.5">1/2 oz</option>
 <option value="1">1 oz</option>
 <option value="16">1 lb</option>
 </select>
 
-<select id="qty2" onchange="toggleCustomQty('qty2','custom2'); updateTotal('size2','qty2','custom2','total2')">
+<select id="qty2" onchange="toggleCustomQty('qty2','custom2')">
 <option value="1">Qty: 1</option>
 <option value="2">Qty: 2</option>
 <option value="3">Qty: 3</option>
@@ -128,28 +118,25 @@ Order on WhatsApp
 <option value="custom">More...</option>
 </select>
 
-<input type="number" id="custom2" placeholder="Enter quantity" oninput="updateTotal('size2','qty2','custom2','total2')">
-
-<div id="total2" class="total">$0.00</div>
+<input type="number" id="custom2" placeholder="Enter quantity">
 
 <button onclick="order('Exotic Strain','size2','qty2','custom2')">
 Order on WhatsApp
 </button>
 </div>
 
-<!-- PRODUCT 3 -->
 <div class="card">
 <img src="strain3.jpg">
 <h3>Top Shelf Strain 🌿</h3>
 
-<select id="size3" onchange="updateTotal('size3','qty3','custom3','total3')">
+<select id="size3">
 <option value="0.125">1/8 oz</option>
 <option value="0.5">1/2 oz</option>
 <option value="1">1 oz</option>
 <option value="16">1 lb</option>
 </select>
 
-<select id="qty3" onchange="toggleCustomQty('qty3','custom3'); updateTotal('size3','qty3','custom3','total3')">
+<select id="qty3" onchange="toggleCustomQty('qty3','custom3')">
 <option value="1">Qty: 1</option>
 <option value="2">Qty: 2</option>
 <option value="3">Qty: 3</option>
@@ -158,28 +145,25 @@ Order on WhatsApp
 <option value="custom">More...</option>
 </select>
 
-<input type="number" id="custom3" placeholder="Enter quantity" oninput="updateTotal('size3','qty3','custom3','total3')">
-
-<div id="total3" class="total">$0.00</div>
+<input type="number" id="custom3" placeholder="Enter quantity">
 
 <button onclick="order('Top Shelf Strain','size3','qty3','custom3')">
 Order on WhatsApp
 </button>
 </div>
 
-<!-- PRODUCT 4 -->
 <div class="card">
 <img src="allstrains.jpg">
 <h3>All Strains Pack</h3>
 
-<select id="size4" onchange="updateTotal('size4','qty4','custom4','total4')">
+<select id="size4">
 <option value="0.125">1/8 oz</option>
 <option value="0.5">1/2 oz</option>
 <option value="1">1 oz</option>
 <option value="16">1 lb</option>
 </select>
 
-<select id="qty4" onchange="toggleCustomQty('qty4','custom4'); updateTotal('size4','qty4','custom4','total4')">
+<select id="qty4" onchange="toggleCustomQty('qty4','custom4')">
 <option value="1">Qty: 1</option>
 <option value="2">Qty: 2</option>
 <option value="3">Qty: 3</option>
@@ -188,9 +172,7 @@ Order on WhatsApp
 <option value="custom">More...</option>
 </select>
 
-<input type="number" id="custom4" placeholder="Enter quantity" oninput="updateTotal('size4','qty4','custom4','total4')">
-
-<div id="total4" class="total">$0.00</div>
+<input type="number" id="custom4" placeholder="Enter quantity">
 
 <button onclick="order('All Strains Pack','size4','qty4','custom4')">
 Order on WhatsApp
@@ -208,38 +190,29 @@ const input = document.getElementById(inputId);
 input.style.display = (select.value === "custom") ? "block" : "none";
 }
 
-function getQty(qtyId, customId){
-const q = document.getElementById(qtyId).value;
-const c = document.getElementById(customId).value;
-return (q === "custom" && c) ? Number(c) : Number(q);
-}
-
-function updateTotal(sizeId, qtyId, customId, totalId){
-const size = Number(document.getElementById(sizeId).value);
-const qty = getQty(qtyId, customId);
-
-if(!qty || qty <= 0){
-document.getElementById(totalId).innerText = "$0.00";
-return;
-}
-
-const total = pricePerOz * size * qty;
-document.getElementById(totalId).innerText = "$" + total.toFixed(2);
+function getDiscount(qty){
+if(qty >= 10) return 0.20;
+if(qty >= 5) return 0.10;
+return 0;
 }
 
 function sizeLabel(size){
-if(size == 0.125) return "1/8 oz";
-if(size == 0.5) return "1/2 oz";
-if(size == 1) return "1 oz";
-if(size == 16) return "1 lb";
+if(size === 0.125) return "1/8 oz";
+if(size === 0.5) return "1/2 oz";
+if(size === 1) return "1 oz";
+if(size === 16) return "1 lb";
 return size + " oz";
 }
 
 function order(product, sizeId, qtyId, customId){
-const size = Number(document.getElementById(sizeId).value);
-const qty = getQty(qtyId, customId);
+const size = Number(document.getElementById(sizeId).value); // FIXED
+const qtySelect = document.getElementById(qtyId).value;
+const customQty = document.getElementById(customId).value;
 
-const total = pricePerOz * size * qty;
+const qty = (qtySelect === "custom" && customQty) ? Number(customQty) : Number(qtySelect);
+
+const discount = getDiscount(qty);
+const total = (pricePerOz * size * qty) * (1 - discount);
 
 const msg = "DIABLITO\n\nOrder Request\n\n" +
 product + "\n" +
