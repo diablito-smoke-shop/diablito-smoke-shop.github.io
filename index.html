@@ -32,7 +32,8 @@ margin:5px 0;
 padding:6px;
 }
 
-input{display:none;}
+input[type="number"]{display:none;}
+input[type="text"]{display:block;}
 
 .price{color:#25D366;font-weight:bold;}
 .savings{color:#ffcc00;font-size:0.9rem;}
@@ -62,18 +63,43 @@ cursor:pointer;
 
 <div class="products">
 
-<div class="card">
-<img src="strain1.jpg">
-<h3>Premium Strain 🔥</h3>
+<!-- REUSABLE PRODUCT BLOCK -->
+<script>
+const products = [
+{id:1,name:"Premium Strain 🔥",img:"strain1.jpg"},
+{id:2,name:"Exotic Strain 💨",img:"strain2.jpg"},
+{id:3,name:"Top Shelf Strain 🌿",img:"strain3.jpg"},
+{id:4,name:"All Strains Pack",img:"allstrains.jpg"}
+];
+</script>
 
-<select id="size1" onchange="updateTotal(1)">
+<div id="productContainer"></div>
+
+<script>
+const pricePerOz = 376.47;
+const minimumOrder = 50;
+
+const coupons = {
+"SAVE10":0.10,
+"VIP20":0.20
+};
+
+function renderProducts(){
+let html="";
+products.forEach(p=>{
+html+=`
+<div class="card">
+<img src="${p.img}">
+<h3>${p.name}</h3>
+
+<select id="size${p.id}" onchange="updateTotal(${p.id})">
 <option value="0.125">1/8 oz</option>
 <option value="0.5">1/2 oz</option>
 <option value="1">1 oz</option>
-<option value="16">1 lb ⭐ Best Value</option>
+<option value="16">1 lb</option>
 </select>
 
-<select id="qty1" onchange="toggleCustomQty('qty1','custom1'); updateTotal(1)">
+<select id="qty${p.id}" onchange="toggleCustomQty('qty${p.id}','custom${p.id}'); updateTotal(${p.id})">
 <option value="1">Qty: 1</option>
 <option value="2">Qty: 2</option>
 <option value="3">Qty: 3</option>
@@ -82,50 +108,43 @@ cursor:pointer;
 <option value="custom">More...</option>
 </select>
 
-<input type="number" id="custom1" placeholder="Enter quantity" oninput="updateTotal(1)">
+<input type="number" id="custom${p.id}" placeholder="Enter quantity" oninput="updateTotal(${p.id})">
 
-<input type="text" id="coupon1" placeholder="Coupon Code (optional)" style="display:block;" oninput="updateTotal(1)">
+<input type="text" id="coupon${p.id}" placeholder="Coupon Code (optional)" oninput="updateTotal(${p.id})">
 
-<div class="price" id="total1">$0.00</div>
-<div class="savings" id="save1"></div>
-<div class="upsell" id="upsell1"></div>
+<div class="price" id="total${p.id}">$0.00</div>
+<div class="savings" id="save${p.id}"></div>
+<div class="upsell" id="upsell${p.id}"></div>
 
-<button onclick="order('Premium Strain','size1','qty1','custom1','coupon1')">
+<button onclick="order('${p.name}','size${p.id}','qty${p.id}','custom${p.id}','coupon${p.id}')">
 Order on WhatsApp
 </button>
 </div>
-
-</div>
-
-<script>
-const pricePerOz = 376.47;
-const minimumOrder = 50;
-
-const coupons = {
-"SAVE10": 0.10,
-"VIP20": 0.20
-};
-
-function toggleCustomQty(selectId, inputId){
-const select=document.getElementById(selectId);
-const input=document.getElementById(inputId);
-input.style.display=(select.value==="custom")?"block":"none";
+`;
+});
+document.getElementById("productContainer").innerHTML=html;
 }
 
-function getQty(qtyId, customId){
-const q=document.getElementById(qtyId).value;
-const c=document.getElementById(customId).value;
-return (q==="custom"&&c)?parseInt(c):parseInt(q);
+function toggleCustomQty(selectId,inputId){
+const s=document.getElementById(selectId);
+const i=document.getElementById(inputId);
+i.style.display=(s.value==="custom")?"block":"none";
 }
 
-function getDiscount(qty){
-if(qty>=10) return 0.20;
-if(qty>=5) return 0.10;
+function getQty(q,c){
+const qv=document.getElementById(q).value;
+const cv=document.getElementById(c).value;
+return (qv==="custom"&&cv)?parseInt(cv):parseInt(qv);
+}
+
+function getDiscount(q){
+if(q>=10)return 0.20;
+if(q>=5)return 0.10;
 return 0;
 }
 
-function getCoupon(code){
-return coupons[code.toUpperCase()] || 0;
+function getCoupon(c){
+return coupons[c.toUpperCase()]||0;
 }
 
 function updateTotal(id){
@@ -134,63 +153,59 @@ const qty=getQty("qty"+id,"custom"+id);
 const coupon=document.getElementById("coupon"+id).value;
 
 const base=pricePerOz*size*qty;
-const bulk=getDiscount(qty);
-const couponDisc=getCoupon(coupon);
-
-const total=base*(1-bulk)*(1-couponDisc);
+const total=base*(1-getDiscount(qty))*(1-getCoupon(coupon));
 const saved=base-total;
 
 document.getElementById("total"+id).innerText="$"+total.toFixed(2);
 
-if(saved>0){
-document.getElementById("save"+id).innerText="🔥 You saved $"+saved.toFixed(2);
-}else{
-document.getElementById("save"+id).innerText="";
-}
+document.getElementById("save"+id).innerText=
+(saved>0)?"You saved $"+saved.toFixed(2):"";
 
-// Upsell logic
 if(qty<5){
-document.getElementById("upsell"+id).innerText=
-"Add "+(5-qty)+" more for 10% off";
+document.getElementById("upsell"+id).innerText="Add "+(5-qty)+" more for 10% off";
 }else if(qty<10){
-document.getElementById("upsell"+id).innerText=
-"Add "+(10-qty)+" more for 20% off";
+document.getElementById("upsell"+id).innerText="Add "+(10-qty)+" more for 20% off";
 }else{
-document.getElementById("upsell"+id).innerText="🔥 Max discount applied";
+document.getElementById("upsell"+id).innerText="Max discount applied";
 }
 }
 
-function getSizeLabel(size){
-if(size==0.125) return "1/8 oz";
-if(size==0.5) return "1/2 oz";
-if(size==1) return "1 oz";
-if(size==16) return "1 lb";
-return size+" oz";
+function sizeLabel(s){
+if(s==0.125)return"1/8 oz";
+if(s==0.5)return"1/2 oz";
+if(s==1)return"1 oz";
+if(s==16)return"1 lb";
+return s+" oz";
 }
 
-function order(product,sizeId,qtyId,customId,couponId){
+function order(name,sizeId,qtyId,customId,couponId){
 const size=parseFloat(document.getElementById(sizeId).value);
 const qty=getQty(qtyId,customId);
 const coupon=document.getElementById(couponId).value;
 
-const base=pricePerOz*size*qty;
-const total=base*(1-getDiscount(qty))*(1-getCoupon(coupon));
+const total=(pricePerOz*size*qty)*(1-getDiscount(qty))*(1-getCoupon(coupon));
 
 if(total<minimumOrder){
 alert("Minimum order is $"+minimumOrder);
 return;
 }
 
-const msg="DIABLITO\n\nOrder Request\n\n"+
-product+"\n"+
-"Size: "+getSizeLabel(size)+"\n"+
-"Quantity: "+qty+"\n"+
-(coupon? "Coupon: "+coupon+"\n":"")+
-"Total: $"+total.toFixed(2)+"\n"+
-"Please confirm availability and total.\n\n";
+const msg=`DIABLITO
+
+Order Request
+
+${name}
+Size: ${sizeLabel(size)}
+Quantity: ${qty}
+${coupon? "Coupon: "+coupon+"\n":""}Total: $${total.toFixed(2)}
+Please confirm availability and total.
+
+`;
 
 window.open("https://wa.me/526635130363?text="+encodeURIComponent(msg));
 }
+
+renderProducts();
 </script>
 
 </body>
