@@ -12,6 +12,12 @@ body{margin:0;font-family:Arial;background:#050505;color:#fff;text-align:center}
 .video{padding:10px}
 .video video{width:90%;border-radius:10px}
 
+.promo{
+background:#ff1a1a;
+padding:10px;
+font-weight:bold;
+}
+
 .products{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
@@ -23,7 +29,8 @@ padding:15px
 background:#111;
 border-radius:10px;
 overflow:hidden;
-box-shadow:0 0 10px rgba(255,0,0,0.3)
+box-shadow:0 0 10px rgba(255,0,0,0.3);
+padding-bottom:10px;
 }
 
 .card img{
@@ -34,12 +41,18 @@ object-fit:cover
 
 .price{color:#ff4444;font-weight:bold}
 
+select{
+width:90%;
+margin:5px 0;
+padding:5px;
+}
+
 button{
 background:#25D366;
 color:#fff;
 border:none;
 padding:10px;
-width:100%;
+width:90%;
 font-weight:bold;
 }
 </style>
@@ -55,6 +68,11 @@ font-weight:bold;
 <div class="trust">🚚 Same Day Delivery • 🔒 Discreet • ⭐ Trusted in Tijuana</div>
 </div>
 
+<!-- DAILY PROMO -->
+<div class="promo">
+🔥 TODAY ONLY: Buy 2 8ths GET DISCOUNT 🔥
+</div>
+
 <div class="video">
 <video controls>
 <source src="GrowHub.mp4" type="video/mp4">
@@ -63,43 +81,87 @@ font-weight:bold;
 
 <div class="products">
 
+<!-- PRODUCT 1 -->
 <div class="card">
 <img src="strain1.jpg">
 <h3>Premium Strain 🔥</h3>
-<div class="price">$200</div>
-<button onclick="window.open('https://wa.me/526635130363?text=Premium%20Strain')">
+
+<select id="q1">
+<option value="1/8 oz">1/8 oz</option>
+<option value="2 x 1/8 oz">2 x 1/8 oz</option>
+<option value="1/2 oz">1/2 oz</option>
+<option value="1 oz">1 oz</option>
+<option value="2 oz">2 oz</option>
+</select>
+
+<button onclick="order('Premium Strain', 'q1')">
 Order on WhatsApp
 </button>
 </div>
 
+<!-- PRODUCT 2 -->
 <div class="card">
 <img src="strain2.jpg">
 <h3>Exotic Strain 💨</h3>
-<div class="price">$250</div>
-<button onclick="window.open('https://wa.me/526635130363?text=Exotic%20Strain')">
+
+<select id="q2">
+<option value="1/8 oz">1/8 oz</option>
+<option value="2 x 1/8 oz">2 x 1/8 oz</option>
+<option value="1/2 oz">1/2 oz</option>
+<option value="1 oz">1 oz</option>
+<option value="2 oz">2 oz</option>
+</select>
+
+<button onclick="order('Exotic Strain', 'q2')">
 Order on WhatsApp
 </button>
 </div>
 
+<!-- PRODUCT 3 -->
 <div class="card">
 <img src="strain3.jpg">
 <h3>Top Shelf Strain 🌿</h3>
-<div class="price">$280</div>
-<button onclick="window.open('https://wa.me/526635130363?text=Top%20Shelf%20Strain')">
+
+<select id="q3">
+<option value="1/8 oz">1/8 oz</option>
+<option value="2 x 1/8 oz">2 x 1/8 oz</option>
+<option value="1/2 oz">1/2 oz</option>
+<option value="1 oz">1 oz</option>
+<option value="2 oz">2 oz</option>
+</select>
+
+<button onclick="order('Top Shelf Strain', 'q3')">
 Order on WhatsApp
 </button>
 </div>
 
+<!-- PRODUCT 4 -->
 <div class="card">
 <img src="allstrains.jpg">
 <h3>All Strains Pack</h3>
-<div class="price">$600</div>
-<button onclick="window.open('https://wa.me/526635130363?text=All%20Strains')">
+
+<select id="q4">
+<option value="1/8 oz">1/8 oz</option>
+<option value="2 x 1/8 oz">2 x 1/8 oz</option>
+<option value="1/2 oz">1/2 oz</option>
+<option value="1 oz">1 oz</option>
+<option value="2 oz">2 oz</option>
+</select>
+
+<button onclick="order('All Strains Pack', 'q4')">
 Order on WhatsApp
 </button>
 </div>
 
 </div>
+
+<script>
+function order(product, id){
+const qty=document.getElementById(id).value;
+const msg=encodeURIComponent("🔥 DIABLITO ORDER%0AProduct: "+product+"%0AQuantity: "+qty);
+window.open("https://wa.me/526635130363?text="+msg);
+}
+</script>
 
 </body>
 </html>
