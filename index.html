@@ -11,6 +11,15 @@ body{margin:0;font-family:Arial;background:#050505;color:#fff;text-align:center}
 .trust{font-size:0.9rem;opacity:0.8;margin-bottom:10px}
 .video{padding:10px}
 .video video{width:90%;border-radius:10px}
+
+/* 🔥 NEW BANNER (ONLY ADDITION) */
+.grand{
+background:#00ff99;
+color:#000;
+padding:10px;
+font-weight:bold;
+}
+
 .promo{background:#ff1a1a;padding:10px;font-weight:bold;}
 
 .products{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;padding:15px}
@@ -59,6 +68,9 @@ button{background:#25D366;color:#fff;border:none;padding:10px;width:90%;font-wei
 <p>Order instantly via WhatsApp</p>
 <div class="trust">🚚 Same Day Delivery • 🔒 Discreet • ⭐ Trusted in Tijuana</div>
 </div>
+
+<!-- 🔥 NEW LINE ADDED ONLY -->
+<div class="grand">🎉 GRAND OPENING SPECIAL SALE 🎉</div>
 
 <div class="promo">🔥 BUY MORE = BETTER DEALS 🔥</div>
 
@@ -199,7 +211,6 @@ if(render) document.getElementById("cartItems").innerHTML=html;
 document.getElementById("cartTotal").innerText=sum.toFixed(2);
 }
 
-/* 🔥 FIXED MESSAGE (EMOJI SAFE) */
 function sendOrder(){
 if(Object.keys(cart).length===0)return;
 
