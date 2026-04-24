@@ -26,21 +26,6 @@ button{background:#25D366;color:#fff;border:none;padding:10px;width:90%;font-wei
 .item-total{font-size:1.1rem;font-weight:bold;margin-top:5px;color:#00ff99;}
 .glow{color:#00ff99;text-shadow:0 0 10px #00ff99;}
 
-.save{
-font-size:0.85rem;
-color:#00ff99;
-opacity:0.8;
-}
-
-.pop{
-animation:pop 0.3s ease;
-}
-@keyframes pop{
-0%{transform:scale(1);}
-50%{transform:scale(1.1);}
-100%{transform:scale(1);}
-}
-
 .cart{background:#000;padding:20px;border-top:2px solid #ff1a1a;margin-top:20px;}
 .cart-total{font-size:2rem;color:#00ff99;margin:10px 0;}
 
@@ -91,19 +76,22 @@ updateCart();
 fetchRate();
 setInterval(fetchRate,60000);
 
+/* 🔥 PRICES */
 function getUnitPrice(size){
 if(size==0.125) return 800 * rate;
 if(size==0.5) return 180;
 if(size==1) return 300;
-if(size==8) return 2200;
 if(size==16) return 3600;
 return 0;
 }
 
-/* 🔥 STANDARD PRICE (USED FOR SAVINGS) */
-function getBasePrice(size){
-const basePerOz = 400;
-return basePerOz * size;
+/* 🔥 REGULAR PRICE (UPDATED ONLY HERE) */
+function getRegularPrice(size){
+if(size==0.125) return 1000 * rate; // ✅ FIXED (was 800 before)
+if(size==0.5) return 220;
+if(size==1) return 350;
+if(size==16) return 4000;
+return 0;
 }
 
 let cart = {};
@@ -130,39 +118,39 @@ function sizeLabel(s){
 if(s==0.125)return "1/8 oz";
 if(s==0.5)return "1/2 oz";
 if(s==1)return "1 oz";
-if(s==8)return "1/2 lb";
 if(s==16)return "1 lb";
 return s+" oz";
 }
 
+/* 🔥 TOTAL + SAVINGS */
 function updateTotals(){
 for(let i=1;i<=3;i++){
 const size=parseFloat(document.getElementById("size"+i).value);
 const qty=getQty("qty"+i,"custom"+i)||0;
 
-const price=getUnitPrice(size);
-const total=price*qty;
-const base=getBasePrice(size)*qty;
-const saved = base - total;
+const unit=getUnitPrice(size);
+const regular=getRegularPrice(size);
+
+const total=unit*qty;
+const regularTotal=regular*qty;
+const savings=regularTotal-total;
 
 const el=document.getElementById("total"+i);
-el.innerText="$"+total.toFixed(2);
+
+let text="$"+total.toFixed(2);
+if(savings>0){
+text+=" (Save $"+savings.toFixed(2)+")";
+}
+
+el.innerText=text;
 
 if(total>0) el.classList.add("glow");
 else el.classList.remove("glow");
 
-/* 🔥 SAVINGS DISPLAY */
-const saveEl=document.getElementById("save"+i);
-if(saved>0){
-saveEl.innerText="You Save $" + saved.toFixed(2);
-}else{
-saveEl.innerText="";
-}
-
 /* SYNC */
 if(cart[i]){
-cart[i].total = total;
-cart[i].qty = qty;
+cart[i].total=total;
+cart[i].qty=qty;
 }
 }
 updateCart(false);
@@ -180,11 +168,6 @@ qty:qty,
 total:getUnitPrice(size)*qty
 };
 
-/* 🔥 POP EFFECT */
-const card=document.getElementById("card"+i);
-card.classList.add("pop");
-setTimeout(()=>card.classList.remove("pop"),300);
-
 updateCart();
 }
 
@@ -194,7 +177,6 @@ delete cart[i];
 document.getElementById("qty"+i).value="0";
 document.getElementById("total"+i).innerText="$0.00";
 document.getElementById("total"+i).classList.remove("glow");
-document.getElementById("save"+i).innerText="";
 
 updateCart();
 }
@@ -241,13 +223,14 @@ msg+="Grand Total: $"+grand.toFixed(2);
 window.open("https://wa.me/526635130363?text="+encodeURIComponent(msg));
 }
 
+/* BUILD */
 const container=document.querySelector(".products");
 
 products.forEach((p,i)=>{
 let id=i+1;
 
 container.innerHTML+=`
-<div class="card" id="card${id}">
+<div class="card">
 <img src="${p.img}">
 <h3>${p.name}</h3>
 
@@ -255,7 +238,6 @@ container.innerHTML+=`
 <option value="0.125">1/8 oz</option>
 <option value="0.5">1/2 oz</option>
 <option value="1">1 oz</option>
-<option value="8">1/2 lb</option>
 <option value="16">1 lb</option>
 </select>
 
@@ -272,7 +254,6 @@ container.innerHTML+=`
 <input type="number" id="custom${id}" placeholder="Enter quantity">
 
 <div id="total${id}" class="item-total">$0.00</div>
-<div id="save${id}" class="save"></div>
 
 <button onclick="addToCart(${id})">Add to Cart</button>
 </div>`;
