@@ -82,10 +82,7 @@ border-top:2px solid #ff1a1a;
 margin-top:20px;
 }
 
-.cart h3{
-margin:0;
-font-size:1.5rem;
-}
+.cart h3{margin:0;font-size:1.5rem;}
 
 .cart-total{
 font-size:2rem;
@@ -93,10 +90,7 @@ color:#00ff99;
 margin:10px 0;
 }
 
-.cart-count{
-font-size:0.9rem;
-opacity:0.8;
-}
+.cart-count{font-size:0.9rem;opacity:0.8;}
 
 .cart-item{
 background:#111;
@@ -246,9 +240,7 @@ font-weight:bold;
 <div class="cart">
 <h3>Your Cart Total</h3>
 <div class="cart-count">Items: <span id="cartCount">0</span></div>
-
 <div id="cartItems"></div>
-
 <div class="cart-total">$<span id="cartTotal">0.00</span></div>
 <button onclick="sendOrder()">Order on WhatsApp</button>
 </div>
@@ -297,15 +289,24 @@ el.addEventListener("input",updateTotals);
 function addToCart(name,sizeId,qtyId,customId){
 const size=parseFloat(document.getElementById(sizeId).value);
 const qty=getQty(qtyId,customId);
-
 if(!qty||qty<=0)return;
 
+const label=sizeLabel(size);
+
+// 🔥 KEY FIX: merge instead of duplicate
+const existing=cart.find(i=>i.name===name && i.size===label);
+
+if(existing){
+existing.qty=qty;
+existing.total=pricePerOz*size*qty;
+}else{
 cart.push({
 name:name,
-size:sizeLabel(size),
+size:label,
 qty:qty,
 total:pricePerOz*size*qty
 });
+}
 
 updateCart();
 }
@@ -313,7 +314,7 @@ updateCart();
 function removeItem(index){
 cart.splice(index,1);
 updateCart();
-updateTotals(); // 🔥 FIX ADDED HERE
+updateTotals();
 }
 
 function updateCart(){
