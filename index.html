@@ -29,25 +29,22 @@ box-shadow:0 0 10px rgba(255,0,0,0.3);
 padding-bottom:10px;
 }
 
-.card img{width:100%;height:140px;object-fit:cover}
+.card img{width:100%;height:140px;object-fit:cover;cursor:pointer}
 
-.thumb-container{
+.gallery{
 display:flex;
 justify-content:center;
 gap:5px;
-margin-top:5px;
+margin:5px;
 }
 
-.thumb-container img{
+.gallery img{
 width:30%;
 height:50px;
 object-fit:cover;
 cursor:pointer;
 border-radius:5px;
-opacity:0.7;
 }
-
-.thumb-container img:hover{opacity:1;}
 
 select,input{
 width:90%;
@@ -65,34 +62,26 @@ padding:10px;
 width:90%;
 font-weight:bold;
 cursor:pointer;
-margin-top:5px;
 }
 
-/* 🔥 CLEAN TOTAL DISPLAY */
-.item-total{
-font-size:1.1rem;
-font-weight:bold;
-margin-top:5px;
-color:#00ff99;
+/* IMAGE VIEW MODAL */
+.modal{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.9);
+justify-content:center;
+align-items:center;
+z-index:999;
 }
 
-/* 🔥 CART UI */
-.cart{
-background:#000;
-padding:20px;
-border-top:2px solid #ff1a1a;
-margin-top:20px;
-}
-
-.cart h3{
-margin:0;
-font-size:1.5rem;
-}
-
-.cart-total{
-font-size:2rem;
-color:#00ff99;
-margin:10px 0;
+.modal img{
+max-width:90%;
+max-height:90%;
+border-radius:10px;
 }
 </style>
 </head>
@@ -119,23 +108,23 @@ margin:10px 0;
 
 <!-- PRODUCT 1 -->
 <div class="card">
-<img id="main1" src="strain1.jpg">
-<div class="thumb-container">
-<img src="strain1.jpg" onclick="swapImage('main1',this.src)">
-<img src="strain1-nug1.jpg" onclick="swapImage('main1',this.src)">
-<img src="strain1-nug2.jpg" onclick="swapImage('main1',this.src)">
+<img src="strain1.jpg" onclick="openModal(this.src)">
+<div class="gallery">
+<img src="strain1.jpg" onclick="openModal(this.src)">
+<img src="strain1-nug1.jpg" onclick="openModal(this.src)">
+<img src="strain1-nug2.jpg" onclick="openModal(this.src)">
 </div>
-
 <h3>Premium Strain 🔥</h3>
 
-<select id="size1">
+<select id="size1" onchange="updateTotal(1)">
+<option value="0">Select Size</option>
 <option value="0.125">1/8 oz</option>
 <option value="0.5">1/2 oz</option>
 <option value="1">1 oz</option>
 <option value="16">1 lb</option>
 </select>
 
-<select id="qty1" onchange="toggleCustomQty('qty1','custom1')">
+<select id="qty1" onchange="toggleCustomQty('qty1','custom1');updateTotal(1)">
 <option value="0">Qty: 0</option>
 <option value="1">Qty: 1</option>
 <option value="2">Qty: 2</option>
@@ -145,32 +134,34 @@ margin:10px 0;
 <option value="custom">More...</option>
 </select>
 
-<input type="number" id="custom1" placeholder="Enter quantity">
+<input type="number" id="custom1" placeholder="Enter quantity" oninput="updateTotal(1)">
 
-<div id="total1" class="item-total">$0.00</div>
+<div id="total1">$0.00</div>
 
-<button onclick="addToCart('Premium Strain','size1','qty1','custom1')">Add to Cart</button>
+<button onclick="order('Premium Strain','size1','qty1','custom1')">
+Order on WhatsApp
+</button>
 </div>
 
 <!-- PRODUCT 2 -->
 <div class="card">
-<img id="main2" src="strain2.jpg">
-<div class="thumb-container">
-<img src="strain2.jpg" onclick="swapImage('main2',this.src)">
-<img src="strain2-nug1.jpg" onclick="swapImage('main2',this.src)">
-<img src="strain2-nug2.jpg" onclick="swapImage('main2',this.src)">
+<img src="strain2.jpg" onclick="openModal(this.src)">
+<div class="gallery">
+<img src="strain2.jpg" onclick="openModal(this.src)">
+<img src="strain2-nug1.jpg" onclick="openModal(this.src)">
+<img src="strain2-nug2.jpg" onclick="openModal(this.src)">
 </div>
-
 <h3>Exotic Strain 💨</h3>
 
-<select id="size2">
+<select id="size2" onchange="updateTotal(2)">
+<option value="0">Select Size</option>
 <option value="0.125">1/8 oz</option>
 <option value="0.5">1/2 oz</option>
 <option value="1">1 oz</option>
 <option value="16">1 lb</option>
 </select>
 
-<select id="qty2" onchange="toggleCustomQty('qty2','custom2')">
+<select id="qty2" onchange="toggleCustomQty('qty2','custom2');updateTotal(2)">
 <option value="0">Qty: 0</option>
 <option value="1">Qty: 1</option>
 <option value="2">Qty: 2</option>
@@ -180,32 +171,34 @@ margin:10px 0;
 <option value="custom">More...</option>
 </select>
 
-<input type="number" id="custom2" placeholder="Enter quantity">
+<input type="number" id="custom2" placeholder="Enter quantity" oninput="updateTotal(2)">
 
-<div id="total2" class="item-total">$0.00</div>
+<div id="total2">$0.00</div>
 
-<button onclick="addToCart('Exotic Strain','size2','qty2','custom2')">Add to Cart</button>
+<button onclick="order('Exotic Strain','size2','qty2','custom2')">
+Order on WhatsApp
+</button>
 </div>
 
 <!-- PRODUCT 3 -->
 <div class="card">
-<img id="main3" src="strain3.jpg">
-<div class="thumb-container">
-<img src="strain3.jpg" onclick="swapImage('main3',this.src)">
-<img src="strain3-nug1.jpg" onclick="swapImage('main3',this.src)">
-<img src="strain3-nug2.jpg" onclick="swapImage('main3',this.src)">
+<img src="strain3.jpg" onclick="openModal(this.src)">
+<div class="gallery">
+<img src="strain3.jpg" onclick="openModal(this.src)">
+<img src="strain3-nug1.jpg" onclick="openModal(this.src)">
+<img src="strain3-nug2.jpg" onclick="openModal(this.src)">
 </div>
-
 <h3>Top Shelf Strain 🌿</h3>
 
-<select id="size3">
+<select id="size3" onchange="updateTotal(3)">
+<option value="0">Select Size</option>
 <option value="0.125">1/8 oz</option>
 <option value="0.5">1/2 oz</option>
 <option value="1">1 oz</option>
 <option value="16">1 lb</option>
 </select>
 
-<select id="qty3" onchange="toggleCustomQty('qty3','custom3')">
+<select id="qty3" onchange="toggleCustomQty('qty3','custom3');updateTotal(3)">
 <option value="0">Qty: 0</option>
 <option value="1">Qty: 1</option>
 <option value="2">Qty: 2</option>
@@ -215,104 +208,82 @@ margin:10px 0;
 <option value="custom">More...</option>
 </select>
 
-<input type="number" id="custom3" placeholder="Enter quantity">
+<input type="number" id="custom3" placeholder="Enter quantity" oninput="updateTotal(3)">
 
-<div id="total3" class="item-total">$0.00</div>
+<div id="total3">$0.00</div>
 
-<button onclick="addToCart('Top Shelf Strain','size3','qty3','custom3')">Add to Cart</button>
+<button onclick="order('Top Shelf Strain','size3','qty3','custom3')">
+Order on WhatsApp
+</button>
 </div>
 
 </div>
 
-<!-- CART -->
-<div class="cart">
-<h3>Your Cart Total</h3>
-<div class="cart-total">$<span id="cartTotal">0.00</span></div>
-<button onclick="sendOrder()">Order on WhatsApp</button>
+<!-- IMAGE MODAL -->
+<div class="modal" id="modal" onclick="closeModal()">
+<img id="modalImg">
 </div>
 
 <script>
 const pricePerOz = 376.47;
-let cart = [];
 
-function swapImage(id,src){document.getElementById(id).src=src;}
-
-function toggleCustomQty(selectId,inputId){
-const s=document.getElementById(selectId);
-const i=document.getElementById(inputId);
-i.style.display=(s.value==="custom")?"block":"none";
-updateTotals();
+function toggleCustomQty(selectId, inputId){
+const select = document.getElementById(selectId);
+const input = document.getElementById(inputId);
+input.style.display = (select.value === "custom") ? "block" : "none";
 }
 
-function getQty(q,c){
-const qs=document.getElementById(q).value;
-const cv=document.getElementById(c).value;
-return (qs==="custom"&&cv)?parseInt(cv):parseInt(qs);
+function updateTotal(id){
+const size = parseFloat(document.getElementById("size"+id).value);
+const qtySelect = document.getElementById("qty"+id).value;
+const customQty = document.getElementById("custom"+id).value;
+
+let qty = (qtySelect === "custom" && customQty) ? parseInt(customQty) : parseInt(qtySelect);
+
+if(!size || !qty){
+document.getElementById("total"+id).innerHTML = "$0.00";
+return;
 }
 
-function sizeLabel(s){
-if(s==0.125)return "1/8 oz";
-if(s==0.5)return "1/2 oz";
-if(s==1)return "1 oz";
-if(s==16)return "1 lb";
-return s+" oz";
+const total = pricePerOz * size * qty;
+document.getElementById("total"+id).innerHTML = "$" + total.toFixed(2);
 }
 
-function updateTotals(){
-for(let i=1;i<=3;i++){
-const size=parseFloat(document.getElementById("size"+i).value);
-const qty=getQty("qty"+i,"custom"+i)||0;
-const total=pricePerOz*size*qty;
-document.getElementById("total"+i).innerText="$"+total.toFixed(2);
-}
-}
-
-document.querySelectorAll("select,input").forEach(el=>{
-el.addEventListener("change",updateTotals);
-el.addEventListener("input",updateTotals);
-});
-
-function addToCart(name,sizeId,qtyId,customId){
-const size=parseFloat(document.getElementById(sizeId).value);
-const qty=getQty(qtyId,customId);
-if(!qty||qty<=0)return;
-
-const total=pricePerOz*size*qty;
-
-cart.push({
-name:name,
-size:sizeLabel(size),
-qty:qty,
-total:total
-});
-
-updateCart();
+function sizeLabel(size){
+if(size == 0.125) return "1/8 oz";
+if(size == 0.5) return "1/2 oz";
+if(size == 1) return "1 oz";
+if(size == 16) return "1 lb";
+return size + " oz";
 }
 
-function updateCart(){
-let sum=0;
-cart.forEach(i=>sum+=i.total);
-document.getElementById("cartTotal").innerText=sum.toFixed(2);
+function order(product, sizeId, qtyId, customId){
+const size = parseFloat(document.getElementById(sizeId).value);
+const qtySelect = document.getElementById(qtyId).value;
+const customQty = document.getElementById(customId).value;
+
+const qty = (qtySelect === "custom" && customQty) ? parseInt(customQty) : parseInt(qtySelect);
+
+const total = pricePerOz * size * qty;
+
+const msg = "DIABLITO\n\nOrder Request\n\n" +
+product + "\n" +
+"Size: " + sizeLabel(size) + "\n" +
+"Quantity: " + qty + "\n" +
+"Total: $" + total.toFixed(2) + "\n" +
+"Please confirm availability and total.\n\n";
+
+window.open("https://wa.me/526635130363?text=" + encodeURIComponent(msg));
 }
 
-function sendOrder(){
-if(cart.length===0)return;
+/* IMAGE VIEW */
+function openModal(src){
+document.getElementById("modal").style.display="flex";
+document.getElementById("modalImg").src=src;
+}
 
-let msg="DIABLITO\n\nOrder Request\n\n";
-
-cart.forEach(item=>{
-msg+=item.name+"\n";
-msg+="Size: "+item.size+"\n";
-msg+="Quantity: "+item.qty+"\n";
-msg+="Item Total: $"+item.total.toFixed(2)+"\n\n";
-});
-
-const grand=cart.reduce((a,b)=>a+b.total,0);
-
-msg+="Grand Total: $"+grand.toFixed(2)+"\n";
-msg+="Please confirm availability and total.\n\n";
-
-window.open("https://wa.me/526635130363?text="+encodeURIComponent(msg));
+function closeModal(){
+document.getElementById("modal").style.display="none";
 }
 </script>
 
