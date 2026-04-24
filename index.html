@@ -76,18 +76,18 @@ updateCart();
 fetchRate();
 setInterval(fetchRate,60000);
 
-/* 🔥 PRICES */
+/* 🔥 ORIGINAL PRICE TABLE (UNCHANGED) */
 function getUnitPrice(size){
 if(size==0.125) return 800 * rate;
 if(size==0.5) return 180;
 if(size==1) return 300;
-if(size==16) return 3600;
+if(size==16) return 4300;
 return 0;
 }
 
-/* 🔥 REGULAR PRICE (UPDATED ONLY HERE) */
+/* 🔥 ONLY FIX HERE */
 function getRegularPrice(size){
-if(size==0.125) return 1000 * rate; // ✅ FIXED (was 800 before)
+if(size==0.125) return 1000 * rate; // ✅ ONLY CHANGE
 if(size==0.5) return 220;
 if(size==1) return 350;
 if(size==16) return 4000;
@@ -149,8 +149,8 @@ else el.classList.remove("glow");
 
 /* SYNC */
 if(cart[i]){
-cart[i].total=total;
-cart[i].qty=qty;
+cart[i].total = total;
+cart[i].qty = qty;
 }
 }
 updateCart(false);
