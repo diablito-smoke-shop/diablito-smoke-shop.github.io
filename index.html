@@ -98,27 +98,20 @@ font-size:0.9rem;
 opacity:0.8;
 }
 
-.cart-items{
-text-align:left;
-margin-top:10px;
-}
-
 .cart-item{
+background:#111;
+margin:5px 0;
+padding:8px;
+border-radius:6px;
 display:flex;
 justify-content:space-between;
 align-items:center;
-background:#111;
-padding:8px;
-margin-bottom:5px;
-border-radius:5px;
-font-size:0.9rem;
 }
 
 .remove-btn{
-color:#ff4d4d;
+color:red;
 cursor:pointer;
 font-weight:bold;
-margin-left:10px;
 }
 </style>
 </head>
@@ -175,7 +168,7 @@ margin-left:10px;
 
 <div id="total1" class="item-total">$0.00</div>
 
-<button onclick="addToCart('Premium Strain','size1','qty1','custom1',1)">Add to Cart</button>
+<button onclick="addToCart('Premium Strain','size1','qty1','custom1')">Add to Cart</button>
 </div>
 
 <!-- PRODUCT 2 -->
@@ -210,7 +203,7 @@ margin-left:10px;
 
 <div id="total2" class="item-total">$0.00</div>
 
-<button onclick="addToCart('Exotic Strain','size2','qty2','custom2',2)">Add to Cart</button>
+<button onclick="addToCart('Exotic Strain','size2','qty2','custom2')">Add to Cart</button>
 </div>
 
 <!-- PRODUCT 3 -->
@@ -245,7 +238,7 @@ margin-left:10px;
 
 <div id="total3" class="item-total">$0.00</div>
 
-<button onclick="addToCart('Top Shelf Strain','size3','qty3','custom3',3)">Add to Cart</button>
+<button onclick="addToCart('Top Shelf Strain','size3','qty3','custom3')">Add to Cart</button>
 </div>
 
 </div>
@@ -254,10 +247,9 @@ margin-left:10px;
 <h3>Your Cart Total</h3>
 <div class="cart-count">Items: <span id="cartCount">0</span></div>
 
-<div class="cart-items" id="cartItems"></div>
+<div id="cartItems"></div>
 
 <div class="cart-total">$<span id="cartTotal">0.00</span></div>
-
 <button onclick="sendOrder()">Order on WhatsApp</button>
 </div>
 
@@ -302,7 +294,7 @@ el.addEventListener("change",updateTotals);
 el.addEventListener("input",updateTotals);
 });
 
-function addToCart(name,sizeId,qtyId,customId,index){
+function addToCart(name,sizeId,qtyId,customId){
 const size=parseFloat(document.getElementById(sizeId).value);
 const qty=getQty(qtyId,customId);
 
@@ -312,40 +304,35 @@ cart.push({
 name:name,
 size:sizeLabel(size),
 qty:qty,
-total:pricePerOz*size*qty,
-productIndex:index
+total:pricePerOz*size*qty
 });
 
 updateCart();
 }
 
 function removeItem(index){
-const removed = cart[index];
 cart.splice(index,1);
-
-/* RESET PRODUCT UI */
-if(removed){
-document.getElementById("qty"+removed.productIndex).value="0";
-document.getElementById("custom"+removed.productIndex).value="";
-updateTotals();
-}
-
 updateCart();
+updateTotals(); // 🔥 FIX ADDED HERE
 }
 
 function updateCart(){
 let sum=0;
 let html="";
 
-cart.forEach((item,i)=>{
+cart.forEach((item,index)=>{
 sum+=item.total;
 
 html+=`
 <div class="cart-item">
 <div>
-${item.name} (${item.size}) x${item.qty} - $${item.total.toFixed(2)}
+${item.name}<br>
+${item.size} x ${item.qty}
 </div>
-<div class="remove-btn" onclick="removeItem(${i})">❌</div>
+<div>
+$${item.total.toFixed(2)} 
+<span class="remove-btn" onclick="removeItem(${index})">❌</span>
+</div>
 </div>
 `;
 });
