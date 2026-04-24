@@ -68,7 +68,6 @@ cursor:pointer;
 margin-top:5px;
 }
 
-/* TOTAL */
 .item-total{
 font-size:1.1rem;
 font-weight:bold;
@@ -76,17 +75,11 @@ margin-top:5px;
 color:#00ff99;
 }
 
-/* CART */
 .cart{
 background:#000;
 padding:20px;
 border-top:2px solid #ff1a1a;
 margin-top:20px;
-}
-
-.cart h3{
-margin:0;
-font-size:1.5rem;
 }
 
 .cart-total{
@@ -95,11 +88,21 @@ color:#00ff99;
 margin:10px 0;
 }
 
-/* 🔥 NEW: CART ITEMS LIST */
 .cart-items{
 text-align:left;
 margin-top:10px;
 font-size:0.9rem;
+}
+
+.remove-btn{
+color:red;
+cursor:pointer;
+margin-left:10px;
+}
+
+.qty-edit{
+width:50px;
+margin-left:5px;
 }
 </style>
 </head>
@@ -152,7 +155,7 @@ font-size:0.9rem;
 <option value="custom">More...</option>
 </select>
 
-<input type="number" id="custom1" placeholder="Enter quantity">
+<input type="number" id="custom1">
 
 <div id="total1" class="item-total">$0.00</div>
 
@@ -187,7 +190,7 @@ font-size:0.9rem;
 <option value="custom">More...</option>
 </select>
 
-<input type="number" id="custom2" placeholder="Enter quantity">
+<input type="number" id="custom2">
 
 <div id="total2" class="item-total">$0.00</div>
 
@@ -222,7 +225,7 @@ font-size:0.9rem;
 <option value="custom">More...</option>
 </select>
 
-<input type="number" id="custom3" placeholder="Enter quantity">
+<input type="number" id="custom3">
 
 <div id="total3" class="item-total">$0.00</div>
 
@@ -233,12 +236,9 @@ font-size:0.9rem;
 
 <!-- CART -->
 <div class="cart">
-<h3>Your Cart Total</h3>
-
-<div class="cart-items" id="cartItems"></div>
-
+<h3>Your Cart</h3>
+<div id="cartItems" class="cart-items"></div>
 <div class="cart-total">$<span id="cartTotal">0.00</span></div>
-
 <button onclick="sendOrder()">Order on WhatsApp</button>
 </div>
 
@@ -248,10 +248,10 @@ let cart = [];
 
 function swapImage(id,src){document.getElementById(id).src=src;}
 
-function toggleCustomQty(selectId,inputId){
-const s=document.getElementById(selectId);
-const i=document.getElementById(inputId);
-i.style.display=(s.value==="custom")?"block":"none";
+function toggleCustomQty(s,i){
+const sel=document.getElementById(s);
+const inp=document.getElementById(i);
+inp.style.display=(sel.value==="custom")?"block":"none";
 updateTotals();
 }
 
@@ -290,47 +290,67 @@ if(!qty||qty<=0)return;
 
 const total=pricePerOz*size*qty;
 
-cart.push({
-name:name,
-size:sizeLabel(size),
-qty:qty,
-total:total
-});
-
+cart.push({name,size:sizeLabel(size),qty,total});
 updateCart();
 }
 
 function updateCart(){
 let sum=0;
-let list="";
+let html="";
 
-cart.forEach(i=>{
-sum+=i.total;
-list += i.name+" | "+i.size+" | Qty: "+i.qty+" | $"+i.total.toFixed(2)+"<br>";
+cart.forEach((item,index)=>{
+sum+=item.total;
+
+html+=`
+<div>
+${item.name} | ${item.size}
+<input class="qty-edit" type="number" value="${item.qty}" onchange="editQty(${index},this.value)">
+$${item.total.toFixed(2)}
+<span class="remove-btn" onclick="removeItem(${index})">✖</span>
+</div>`;
 });
 
-document.getElementById("cartTotal").innerText=sum.toFixed(2);
-document.getElementById("cartItems").innerHTML=list;
+const delivery = sum>0 ? 5 : 0;
+const grand = sum + delivery;
+
+document.getElementById("cartItems").innerHTML=html + `<br>Delivery: $${delivery.toFixed(2)}`;
+document.getElementById("cartTotal").innerText=grand.toFixed(2);
+}
+
+function removeItem(i){
+cart.splice(i,1);
+updateCart();
+}
+
+function editQty(i,val){
+val=parseInt(val);
+if(!val||val<=0){removeItem(i);return;}
+cart[i].qty=val;
+cart[i].total=cart[i].total/cart[i].qty*val;
+updateCart();
 }
 
 function sendOrder(){
 if(cart.length===0)return;
 
 let msg="DIABLITO\n\nOrder Request\n\n";
+let sum=0;
 
 cart.forEach(item=>{
-msg+=item.name+"\n";
-msg+="Size: "+item.size+"\n";
-msg+="Quantity: "+item.qty+"\n";
-msg+="Item Total: $"+item.total.toFixed(2)+"\n\n";
+msg+=item.name+"\nSize: "+item.size+"\nQty: "+item.qty+"\n$"+item.total.toFixed(2)+"\n\n";
+sum+=item.total;
 });
 
-const grand=cart.reduce((a,b)=>a+b.total,0);
+const delivery=5;
+const grand=sum+delivery;
 
+msg+="Delivery: $"+delivery.toFixed(2)+"\n";
 msg+="Grand Total: $"+grand.toFixed(2)+"\n";
-msg+="Please confirm availability and total.\n\n";
 
 window.open("https://wa.me/526635130363?text="+encodeURIComponent(msg));
+
+cart=[]; // 🔥 auto clear
+updateCart();
 }
 </script>
 
