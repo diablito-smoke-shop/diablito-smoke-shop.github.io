@@ -76,7 +76,6 @@ color:#00ff99;
 transition:0.3s;
 }
 
-/* 🔥 glow */
 .glow{
 box-shadow:0 0 10px #00ff99;
 }
@@ -276,6 +275,7 @@ const size=parseFloat(document.getElementById("size"+i).value);
 const qty=getQty("qty"+i,"custom"+i)||0;
 const total=pricePerOz*size*qty;
 const el=document.getElementById("total"+i);
+
 el.innerText="$"+total.toFixed(2);
 
 if(qty>0){
@@ -308,12 +308,14 @@ updateCart();
 
 function removeItem(id){
 delete cart[id];
-updateCart();
 
-/* reset ONLY that item */
+/* FULL HARD RESET */
 document.getElementById("qty"+id).value="0";
 document.getElementById("custom"+id).value="";
-updateTotals();
+document.getElementById("total"+id).innerText="$0.00";
+document.getElementById("total"+id).classList.remove("glow");
+
+updateCart();
 }
 
 function updateCart(){
