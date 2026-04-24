@@ -292,26 +292,37 @@ const qty=getQty(qtyId,customId);
 if(!qty||qty<=0)return;
 
 const label=sizeLabel(size);
-
-// 🔥 KEY FIX: merge instead of duplicate
 const existing=cart.find(i=>i.name===name && i.size===label);
 
 if(existing){
 existing.qty=qty;
 existing.total=pricePerOz*size*qty;
 }else{
-cart.push({
-name:name,
-size:label,
-qty:qty,
-total:pricePerOz*size*qty
-});
+cart.push({name:name,size:label,qty:qty,total:pricePerOz*size*qty});
 }
 
 updateCart();
 }
 
+function resetProductUI(name){
+if(name==="Premium Strain"){
+document.getElementById("qty1").value="0";
+document.getElementById("custom1").value="";
+}
+if(name==="Exotic Strain"){
+document.getElementById("qty2").value="0";
+document.getElementById("custom2").value="";
+}
+if(name==="Top Shelf Strain"){
+document.getElementById("qty3").value="0";
+document.getElementById("custom3").value="";
+}
+}
+
 function removeItem(index){
+const item=cart[index];
+resetProductUI(item.name); // 🔥 KEY FIX
+
 cart.splice(index,1);
 updateCart();
 updateTotals();
