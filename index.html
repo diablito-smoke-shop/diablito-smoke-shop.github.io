@@ -98,7 +98,6 @@ font-size:0.9rem;
 opacity:0.8;
 }
 
-/* NEW: CART ITEMS LIST */
 .cart-items{
 text-align:left;
 margin-top:10px;
@@ -176,7 +175,7 @@ margin-left:10px;
 
 <div id="total1" class="item-total">$0.00</div>
 
-<button onclick="addToCart('Premium Strain','size1','qty1','custom1')">Add to Cart</button>
+<button onclick="addToCart('Premium Strain','size1','qty1','custom1',1)">Add to Cart</button>
 </div>
 
 <!-- PRODUCT 2 -->
@@ -211,7 +210,7 @@ margin-left:10px;
 
 <div id="total2" class="item-total">$0.00</div>
 
-<button onclick="addToCart('Exotic Strain','size2','qty2','custom2')">Add to Cart</button>
+<button onclick="addToCart('Exotic Strain','size2','qty2','custom2',2)">Add to Cart</button>
 </div>
 
 <!-- PRODUCT 3 -->
@@ -246,7 +245,7 @@ margin-left:10px;
 
 <div id="total3" class="item-total">$0.00</div>
 
-<button onclick="addToCart('Top Shelf Strain','size3','qty3','custom3')">Add to Cart</button>
+<button onclick="addToCart('Top Shelf Strain','size3','qty3','custom3',3)">Add to Cart</button>
 </div>
 
 </div>
@@ -303,7 +302,7 @@ el.addEventListener("change",updateTotals);
 el.addEventListener("input",updateTotals);
 });
 
-function addToCart(name,sizeId,qtyId,customId){
+function addToCart(name,sizeId,qtyId,customId,index){
 const size=parseFloat(document.getElementById(sizeId).value);
 const qty=getQty(qtyId,customId);
 
@@ -313,14 +312,24 @@ cart.push({
 name:name,
 size:sizeLabel(size),
 qty:qty,
-total:pricePerOz*size*qty
+total:pricePerOz*size*qty,
+productIndex:index
 });
 
 updateCart();
 }
 
 function removeItem(index){
+const removed = cart[index];
 cart.splice(index,1);
+
+/* RESET PRODUCT UI */
+if(removed){
+document.getElementById("qty"+removed.productIndex).value="0";
+document.getElementById("custom"+removed.productIndex).value="";
+updateTotals();
+}
+
 updateCart();
 }
 
