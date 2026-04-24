@@ -93,17 +93,10 @@ color:#00ff99;
 margin:10px 0;
 }
 
+/* NEW SMALL ADD */
 .cart-count{
 font-size:0.9rem;
 opacity:0.8;
-}
-
-/* NEW - SIMPLE CART LIST */
-.cart-items{
-font-size:0.9rem;
-text-align:left;
-margin-top:10px;
-opacity:0.9;
 }
 </style>
 </head>
@@ -238,9 +231,6 @@ opacity:0.9;
 <div class="cart">
 <h3>Your Cart Total</h3>
 <div class="cart-count">Items: <span id="cartCount">0</span></div>
-
-<div id="cartItems" class="cart-items"></div>
-
 <div class="cart-total">$<span id="cartTotal">0.00</span></div>
 <button onclick="sendOrder()">Order on WhatsApp</button>
 </div>
@@ -292,6 +282,7 @@ const qty=getQty(qtyId,customId);
 
 if(!qty||qty<=0)return;
 
+/* PREVENT DUPLICATE SPAM */
 cart.push({
 name:name,
 size:sizeLabel(size),
@@ -304,14 +295,8 @@ updateCart();
 
 function updateCart(){
 let sum=0;
-let list="";
+cart.forEach(i=>sum+=i.total);
 
-cart.forEach(item=>{
-sum+=item.total;
-list+=`${item.name} (${item.size}) x${item.qty} - $${item.total.toFixed(2)}<br>`;
-});
-
-document.getElementById("cartItems").innerHTML=list;
 document.getElementById("cartTotal").innerText=sum.toFixed(2);
 document.getElementById("cartCount").innerText=cart.length;
 }
