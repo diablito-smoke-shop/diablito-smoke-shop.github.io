@@ -18,7 +18,6 @@ body{margin:0;font-family:Arial;background:#050505;color:#fff;text-align:center}
 .card{background:#111;border-radius:10px;overflow:hidden;box-shadow:0 0 10px rgba(255,0,0,0.3);padding-bottom:10px}
 .card img{width:100%;height:140px;object-fit:cover}
 
-/* 🔥 NUG THUMBNAILS RESTORED */
 .thumb-container{
 display:flex;
 justify-content:center;
@@ -79,7 +78,6 @@ button{background:#25D366;color:#fff;border:none;padding:10px;width:90%;font-wei
 </div>
 
 <script>
-/* 🔥 LIVE RATE */
 let rate = 17;
 
 async function fetchRate(){
@@ -94,7 +92,6 @@ updateCart();
 fetchRate();
 setInterval(fetchRate,60000);
 
-/* 🔥 PRICE TABLE */
 function getUnitPrice(size){
 if(size==0.125) return 800 * rate;
 if(size==0.5) return 180;
@@ -111,10 +108,7 @@ const products=[
 {name:"Top Shelf Strain 🌿",img:"strain3.jpg",nugs:["strain3.jpg","strain3-nug1.jpg","strain3-nug2.jpg"]}
 ];
 
-/* 🔥 IMAGE SWAP */
-function swapImage(id,src){
-document.getElementById(id).src=src;
-}
+function swapImage(id,src){document.getElementById(id).src=src;}
 
 function toggleCustomQty(selectId,inputId){
 const s=document.getElementById(selectId);
@@ -205,10 +199,11 @@ if(render) document.getElementById("cartItems").innerHTML=html;
 document.getElementById("cartTotal").innerText=sum.toFixed(2);
 }
 
+/* 🔥 FIXED MESSAGE (EMOJI SAFE) */
 function sendOrder(){
 if(Object.keys(cart).length===0)return;
 
-let msg="DIABLITO\n\nOrder Request\n\n";
+let msg="🔥 DIABLITO 🔥\n\nOrder Request\n\n";
 let grand=0;
 
 for(let i in cart){
@@ -221,11 +216,12 @@ msg+="Quantity: "+item.qty+"\n";
 msg+="Item Total: $"+item.total.toFixed(2)+"\n\n";
 }
 
-msg+="Grand Total: $"+grand.toFixed(2);
+msg+="Grand Total: $"+grand.toFixed(2)+"\n";
+msg+="Please confirm availability and total.";
+
 window.open("https://wa.me/526635130363?text="+encodeURIComponent(msg));
 }
 
-/* 🔥 BUILD WITH NUGS */
 const container=document.querySelector(".products");
 
 products.forEach((p,i)=>{
