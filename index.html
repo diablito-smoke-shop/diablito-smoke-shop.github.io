@@ -73,11 +73,12 @@ font-size:1.1rem;
 font-weight:bold;
 margin-top:5px;
 color:#00ff99;
-transition:0.3s;
+transition:0.2s;
 }
 
 .glow{
-box-shadow:0 0 10px #00ff99;
+color:#00ff99;
+text-shadow:0 0 10px #00ff99;
 }
 
 .cart{
@@ -87,24 +88,21 @@ border-top:2px solid #ff1a1a;
 margin-top:20px;
 }
 
+.cart-total{
+font-size:2rem;
+color:#00ff99;
+margin:10px 0;
+}
+
 .cart-item{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin:5px 0;
+border-bottom:1px solid #222;
+padding:5px;
 }
 
 .remove{
 color:red;
 cursor:pointer;
-font-weight:bold;
 margin-left:10px;
-}
-
-.cart-total{
-font-size:2rem;
-color:#00ff99;
-margin:10px 0;
 }
 </style>
 </head>
@@ -127,114 +125,7 @@ margin:10px 0;
 </video>
 </div>
 
-<div class="products">
-
-<!-- PRODUCT 1 -->
-<div class="card">
-<img id="main1" src="strain1.jpg">
-<div class="thumb-container">
-<img src="strain1.jpg" onclick="swapImage('main1',this.src)">
-<img src="strain1-nug1.jpg" onclick="swapImage('main1',this.src)">
-<img src="strain1-nug2.jpg" onclick="swapImage('main1',this.src)">
-</div>
-
-<h3>Premium Strain 🔥</h3>
-
-<select id="size1">
-<option value="0.125">1/8 oz</option>
-<option value="0.5">1/2 oz</option>
-<option value="1">1 oz</option>
-<option value="16">1 lb</option>
-</select>
-
-<select id="qty1" onchange="toggleCustomQty('qty1','custom1')">
-<option value="0">Qty: 0</option>
-<option value="1">Qty: 1</option>
-<option value="2">Qty: 2</option>
-<option value="3">Qty: 3</option>
-<option value="4">Qty: 4</option>
-<option value="5">Qty: 5</option>
-<option value="custom">More...</option>
-</select>
-
-<input type="number" id="custom1">
-
-<div id="total1" class="item-total">$0.00</div>
-
-<button onclick="addToCart(1,'Premium Strain','size1','qty1','custom1')">Add to Cart</button>
-</div>
-
-<!-- PRODUCT 2 -->
-<div class="card">
-<img id="main2" src="strain2.jpg">
-<div class="thumb-container">
-<img src="strain2.jpg" onclick="swapImage('main2',this.src)">
-<img src="strain2-nug1.jpg" onclick="swapImage('main2',this.src)">
-<img src="strain2-nug2.jpg" onclick="swapImage('main2',this.src)">
-</div>
-
-<h3>Exotic Strain 💨</h3>
-
-<select id="size2">
-<option value="0.125">1/8 oz</option>
-<option value="0.5">1/2 oz</option>
-<option value="1">1 oz</option>
-<option value="16">1 lb</option>
-</select>
-
-<select id="qty2" onchange="toggleCustomQty('qty2','custom2')">
-<option value="0">Qty: 0</option>
-<option value="1">Qty: 1</option>
-<option value="2">Qty: 2</option>
-<option value="3">Qty: 3</option>
-<option value="4">Qty: 4</option>
-<option value="5">Qty: 5</option>
-<option value="custom">More...</option>
-</select>
-
-<input type="number" id="custom2">
-
-<div id="total2" class="item-total">$0.00</div>
-
-<button onclick="addToCart(2,'Exotic Strain','size2','qty2','custom2')">Add to Cart</button>
-</div>
-
-<!-- PRODUCT 3 -->
-<div class="card">
-<img id="main3" src="strain3.jpg">
-<div class="thumb-container">
-<img src="strain3.jpg" onclick="swapImage('main3',this.src)">
-<img src="strain3-nug1.jpg" onclick="swapImage('main3',this.src)">
-<img src="strain3-nug2.jpg" onclick="swapImage('main3',this.src)">
-</div>
-
-<h3>Top Shelf Strain 🌿</h3>
-
-<select id="size3">
-<option value="0.125">1/8 oz</option>
-<option value="0.5">1/2 oz</option>
-<option value="1">1 oz</option>
-<option value="16">1 lb</option>
-</select>
-
-<select id="qty3" onchange="toggleCustomQty('qty3','custom3')">
-<option value="0">Qty: 0</option>
-<option value="1">Qty: 1</option>
-<option value="2">Qty: 2</option>
-<option value="3">Qty: 3</option>
-<option value="4">Qty: 4</option>
-<option value="5">Qty: 5</option>
-<option value="custom">More...</option>
-</select>
-
-<input type="number" id="custom3">
-
-<div id="total3" class="item-total">$0.00</div>
-
-<button onclick="addToCart(3,'Top Shelf Strain','size3','qty3','custom3')">Add to Cart</button>
-</div>
-
-</div>
+<div class="products"></div>
 
 <div class="cart">
 <h3>Your Cart</h3>
@@ -244,14 +135,40 @@ margin:10px 0;
 </div>
 
 <script>
-const pricePerOz = 300;
+/* 🔥 LIVE RATE SYSTEM */
+let exchangeRate = 17;
+const pricePerEighthMXN = 800;
+
+async function fetchRate(){
+try{
+const res = await fetch("https://api.exchangerate-api.com/v4/latest/MXN");
+const data = await res.json();
+exchangeRate = data.rates.USD;
+updateTotals();
+}catch(e){
+console.log("rate fallback");
+}
+}
+setInterval(fetchRate,60000);
+fetchRate();
+
+/* 🔥 PRICE FUNCTION */
+function getPrice(size){
+return (pricePerEighthMXN * (size / 0.125)) * exchangeRate;
+}
+
 let cart = {};
 
-function swapImage(id,src){document.getElementById(id).src=src;}
+const products = [
+{name:"Premium Strain 🔥",img:"strain1.jpg"},
+{name:"Exotic Strain 💨",img:"strain2.jpg"},
+{name:"Top Shelf Strain 🌿",img:"strain3.jpg"}
+];
 
-function toggleCustomQty(s,i){
-document.getElementById(i).style.display=
-(document.getElementById(s).value==="custom")?"block":"none";
+function toggleCustomQty(selectId,inputId){
+const s=document.getElementById(selectId);
+const i=document.getElementById(inputId);
+i.style.display=(s.value==="custom")?"block":"none";
 updateTotals();
 }
 
@@ -273,48 +190,33 @@ function updateTotals(){
 for(let i=1;i<=3;i++){
 const size=parseFloat(document.getElementById("size"+i).value);
 const qty=getQty("qty"+i,"custom"+i)||0;
-const total=pricePerOz*size*qty;
-const el=document.getElementById("total"+i);
+const total=getPrice(size)*qty;
 
+const el=document.getElementById("total"+i);
 el.innerText="$"+total.toFixed(2);
 
-if(qty>0){
-el.classList.add("glow");
-}else{
-el.classList.remove("glow");
-}
+if(total>0){el.classList.add("glow");}
+else{el.classList.remove("glow");}
 }
 }
 
-document.querySelectorAll("select,input").forEach(el=>{
-el.addEventListener("change",updateTotals);
-el.addEventListener("input",updateTotals);
-});
-
-function addToCart(id,name,sizeId,qtyId,customId){
-const size=parseFloat(document.getElementById(sizeId).value);
-const qty=getQty(qtyId,customId);
+function addToCart(index){
+const size=parseFloat(document.getElementById("size"+index).value);
+const qty=getQty("qty"+index,"custom"+index);
 if(!qty||qty<=0)return;
 
-cart[id]={
-name:name,
+cart[index]={
+name:products[index-1].name,
 size:sizeLabel(size),
 qty:qty,
-total:pricePerOz*size*qty
+total:getPrice(size)*qty
 };
 
 updateCart();
 }
 
-function removeItem(id){
-delete cart[id];
-
-/* FULL HARD RESET */
-document.getElementById("qty"+id).value="0";
-document.getElementById("custom"+id).value="";
-document.getElementById("total"+id).innerText="$0.00";
-document.getElementById("total"+id).classList.remove("glow");
-
+function removeItem(index){
+delete cart[index];
 updateCart();
 }
 
@@ -322,14 +224,15 @@ function updateCart(){
 let sum=0;
 let html="";
 
-for(let id in cart){
-const item=cart[id];
+for(let i in cart){
+let item=cart[i];
 sum+=item.total;
 
 html+=`
 <div class="cart-item">
-<span>${item.name} (${item.size} x${item.qty})</span>
-<span>$${item.total.toFixed(2)} <span class="remove" onclick="removeItem(${id})">✖</span></span>
+${item.name}<br>
+${item.size} x ${item.qty} - $${item.total.toFixed(2)}
+<span class="remove" onclick="removeItem(${i})">❌</span>
 </div>`;
 }
 
@@ -341,16 +244,63 @@ function sendOrder(){
 if(Object.keys(cart).length===0)return;
 
 let msg="DIABLITO\n\nOrder Request\n\n";
+let grand=0;
 
-for(let id in cart){
-const i=cart[id];
-msg+=i.name+"\nSize: "+i.size+"\nQty: "+i.qty+"\n$"+i.total.toFixed(2)+"\n\n";
+for(let i in cart){
+let item=cart[i];
+grand+=item.total;
+
+msg+=item.name+"\n";
+msg+="Size: "+item.size+"\n";
+msg+="Quantity: "+item.qty+"\n";
+msg+="Item Total: $"+item.total.toFixed(2)+"\n\n";
 }
 
-msg+="Total: $"+document.getElementById("cartTotal").innerText;
+msg+="Grand Total: $"+grand.toFixed(2);
 
 window.open("https://wa.me/526635130363?text="+encodeURIComponent(msg));
 }
+
+/* BUILD PRODUCTS */
+const container=document.querySelector(".products");
+
+products.forEach((p,i)=>{
+let id=i+1;
+
+container.innerHTML+=`
+<div class="card">
+<img src="${p.img}">
+<h3>${p.name}</h3>
+
+<select id="size${id}">
+<option value="0.125">1/8 oz</option>
+<option value="0.5">1/2 oz</option>
+<option value="1">1 oz</option>
+<option value="16">1 lb</option>
+</select>
+
+<select id="qty${id}" onchange="toggleCustomQty('qty${id}','custom${id}')">
+<option value="0">Qty: 0</option>
+<option value="1">Qty: 1</option>
+<option value="2">Qty: 2</option>
+<option value="3">Qty: 3</option>
+<option value="4">Qty: 4</option>
+<option value="5">Qty: 5</option>
+<option value="custom">More...</option>
+</select>
+
+<input type="number" id="custom${id}" placeholder="Enter quantity">
+
+<div id="total${id}" class="item-total">$0.00</div>
+
+<button onclick="addToCart(${id})">Add to Cart</button>
+</div>`;
+});
+
+document.querySelectorAll("select,input").forEach(el=>{
+el.addEventListener("change",updateTotals);
+el.addEventListener("input",updateTotals);
+});
 </script>
 
 </body>
