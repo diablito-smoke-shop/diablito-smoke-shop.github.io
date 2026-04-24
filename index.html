@@ -82,36 +82,19 @@ border-top:2px solid #ff1a1a;
 margin-top:20px;
 }
 
+.cart h3{
+margin:0;
+font-size:1.5rem;
+}
+
 .cart-total{
 font-size:2rem;
 color:#00ff99;
 margin:10px 0;
 }
 
-.cart-items{
-text-align:left;
-margin-top:10px;
-font-size:0.9rem;
-}
-
-.remove-btn{
-color:red;
-cursor:pointer;
-margin-left:10px;
-}
-
-.qty-edit{
-width:50px;
-margin-left:5px;
-}
-
-/* NEW */
-.checkout{
-margin-top:15px;
-}
-
-.status{
-margin-top:10px;
+/* NEW SMALL ADD */
+.cart-count{
 font-size:0.9rem;
 opacity:0.8;
 }
@@ -166,7 +149,7 @@ opacity:0.8;
 <option value="custom">More...</option>
 </select>
 
-<input type="number" id="custom1">
+<input type="number" id="custom1" placeholder="Enter quantity">
 
 <div id="total1" class="item-total">$0.00</div>
 
@@ -201,7 +184,7 @@ opacity:0.8;
 <option value="custom">More...</option>
 </select>
 
-<input type="number" id="custom2">
+<input type="number" id="custom2" placeholder="Enter quantity">
 
 <div id="total2" class="item-total">$0.00</div>
 
@@ -236,7 +219,7 @@ opacity:0.8;
 <option value="custom">More...</option>
 </select>
 
-<input type="number" id="custom3">
+<input type="number" id="custom3" placeholder="Enter quantity">
 
 <div id="total3" class="item-total">$0.00</div>
 
@@ -245,26 +228,11 @@ opacity:0.8;
 
 </div>
 
-<!-- CART -->
 <div class="cart">
-<h3>Your Cart</h3>
-
-<div id="cartItems" class="cart-items"></div>
-
+<h3>Your Cart Total</h3>
+<div class="cart-count">Items: <span id="cartCount">0</span></div>
 <div class="cart-total">$<span id="cartTotal">0.00</span></div>
-
-<div class="checkout">
-<input id="customerLocation" placeholder="Enter delivery area">
-<select id="distance" onchange="updateCart()">
-<option value="5">Nearby ($5)</option>
-<option value="10">Medium ($10)</option>
-<option value="15">Far ($15)</option>
-</select>
-</div>
-
 <button onclick="sendOrder()">Order on WhatsApp</button>
-
-<div id="status" class="status"></div>
 </div>
 
 <script>
@@ -273,10 +241,10 @@ let cart = [];
 
 function swapImage(id,src){document.getElementById(id).src=src;}
 
-function toggleCustomQty(s,i){
-const sel=document.getElementById(s);
-const inp=document.getElementById(i);
-inp.style.display=(sel.value==="custom")?"block":"none";
+function toggleCustomQty(selectId,inputId){
+const s=document.getElementById(selectId);
+const i=document.getElementById(inputId);
+i.style.display=(s.value==="custom")?"block":"none";
 updateTotals();
 }
 
@@ -311,81 +279,46 @@ el.addEventListener("input",updateTotals);
 function addToCart(name,sizeId,qtyId,customId){
 const size=parseFloat(document.getElementById(sizeId).value);
 const qty=getQty(qtyId,customId);
+
 if(!qty||qty<=0)return;
 
-const total=pricePerOz*size*qty;
+/* PREVENT DUPLICATE SPAM */
+cart.push({
+name:name,
+size:sizeLabel(size),
+qty:qty,
+total:pricePerOz*size*qty
+});
 
-cart.push({name,size:sizeLabel(size),qty,total});
 updateCart();
 }
 
 function updateCart(){
 let sum=0;
-let html="";
+cart.forEach(i=>sum+=i.total);
 
-cart.forEach((item,index)=>{
-sum+=item.total;
-
-html+=`
-<div>
-${item.name} | ${item.size}
-<input class="qty-edit" type="number" value="${item.qty}" onchange="editQty(${index},this.value)">
-$${item.total.toFixed(2)}
-<span class="remove-btn" onclick="removeItem(${index})">✖</span>
-</div>`;
-});
-
-const delivery=parseFloat(document.getElementById("distance").value)||0;
-const grand=sum+delivery;
-
-document.getElementById("cartItems").innerHTML=html + `<br>Delivery: $${delivery.toFixed(2)}`;
-document.getElementById("cartTotal").innerText=grand.toFixed(2);
-}
-
-function removeItem(i){
-cart.splice(i,1);
-updateCart();
-}
-
-function editQty(i,val){
-val=parseInt(val);
-if(!val||val<=0){removeItem(i);return;}
-const pricePerItem = cart[i].total / cart[i].qty;
-cart[i].qty=val;
-cart[i].total=pricePerItem*val;
-updateCart();
-}
-
-function generateOrderId(){
-return "ORD-" + Math.floor(Math.random()*1000000);
+document.getElementById("cartTotal").innerText=sum.toFixed(2);
+document.getElementById("cartCount").innerText=cart.length;
 }
 
 function sendOrder(){
 if(cart.length===0)return;
 
-const orderId = generateOrderId();
-const location = document.getElementById("customerLocation").value || "Not provided";
-const delivery=parseFloat(document.getElementById("distance").value)||0;
-
-let msg="DIABLITO\n\nOrder ID: "+orderId+"\n\n";
+let msg="DIABLITO\n\nOrder Request\n\n";
 
 cart.forEach(item=>{
-msg+=item.name+"\nSize: "+item.size+"\nQty: "+item.qty+"\n$"+item.total.toFixed(2)+"\n\n";
+msg+=item.name+"\n";
+msg+="Size: "+item.size+"\n";
+msg+="Quantity: "+item.qty+"\n";
+msg+="Item Total: $"+item.total.toFixed(2)+"\n\n";
 });
 
-const sum=cart.reduce((a,b)=>a+b.total,0);
-const grand=sum+delivery;
+const grand=cart.reduce((a,b)=>a+b.total,0);
 
-msg+="Delivery: $"+delivery.toFixed(2)+"\n";
-msg+="Location: "+location+"\n";
 msg+="Grand Total: $"+grand.toFixed(2)+"\n";
+msg+="Please confirm availability and total.\n\n";
 
 window.open("https://wa.me/526635130363?text="+encodeURIComponent(msg));
-
-document.getElementById("status").innerText="Status: Order Sent (Preparing...)";
-
-cart=[];
-updateCart();
 }
 </script>
 
