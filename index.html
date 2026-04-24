@@ -252,12 +252,8 @@ font-weight:bold;
 </div>
 
 <script>
-// 🔥 FIXED PRICING SYSTEM
 function getPricePerOz(size){
-if(size == 0.125) return 376.47; // original 1/8 pricing restored
-if(size == 0.5) return 300;
-if(size == 1) return 300;
-if(size == 16) return 300;
+if(size == 0.125) return 376.47;
 return 300;
 }
 
@@ -307,7 +303,6 @@ const qty=getQty(qtyId,customId);
 if(!qty||qty<=0)return;
 
 const price=getPricePerOz(size);
-
 const key=name+"-"+size;
 
 cart[key]={
@@ -323,7 +318,19 @@ updateCart();
 function removeItem(key){
 delete cart[key];
 updateCart();
-updateTotals();
+
+/* 🔥 FIX: RESET ITEM DISPLAY */
+const parts = key.split("-");
+const name = parts[0];
+const size = parseFloat(parts[1]);
+
+for(let i=1;i<=3;i++){
+const s=parseFloat(document.getElementById("size"+i).value);
+if(s===size){
+document.getElementById("total"+i).innerText="$0.00";
+document.getElementById("qty"+i).value="0";
+}
+}
 }
 
 function updateCart(){
