@@ -62,7 +62,6 @@ button{background:#25D366;color:#fff;border:none;padding:10px;width:90%;font-wei
 </div>
 
 <script>
-/* 🔥 LIVE RATE */
 let rate = 17;
 
 async function fetchRate(){
@@ -77,14 +76,19 @@ updateCart();
 fetchRate();
 setInterval(fetchRate,60000);
 
-/* 🔥 UPDATED PRICE TABLE ONLY */
 function getUnitPrice(size){
-if(size==0.125) return 800 * rate;   // pesos → usd
+if(size==0.125) return 800 * rate;
 if(size==0.5) return 180;
 if(size==1) return 300;
-if(size==8) return 2200;   // 1/2 lb ✅
-if(size==16) return 3600;  // lb ✅
+if(size==8) return 2200;
+if(size==16) return 3600;
 return 0;
+}
+
+/* 🔥 ONLY ADD THIS FUNCTION */
+function getRegularPrice(size){
+if(size==0.125) return 1000 * rate; // ONLY CHANGE
+return getUnitPrice(size); // everything else untouched
 }
 
 let cart = {};
@@ -116,20 +120,29 @@ if(s==16)return "1 lb";
 return s+" oz";
 }
 
-/* 🔥 SYNC FIX */
 function updateTotals(){
 for(let i=1;i<=3;i++){
 const size=parseFloat(document.getElementById("size"+i).value);
 const qty=getQty("qty"+i,"custom"+i)||0;
+
 const total=getUnitPrice(size)*qty;
 
+/* 🔥 ONLY ADD SAVINGS LOGIC */
+const regular=getRegularPrice(size)*qty;
+const savings=regular-total;
+
 const el=document.getElementById("total"+i);
-el.innerText="$"+total.toFixed(2);
+
+let text="$"+total.toFixed(2);
+if(size==0.125 && savings>0){
+text+=" (Save $"+savings.toFixed(2)+")";
+}
+
+el.innerText=text;
 
 if(total>0) el.classList.add("glow");
 else el.classList.remove("glow");
 
-/* 🔥 KEEP IN SYNC WITH CART */
 if(cart[i]){
 cart[i].total = total;
 cart[i].qty = qty;
@@ -156,7 +169,6 @@ updateCart();
 function removeItem(i){
 delete cart[i];
 
-/* 🔥 RESET ITEM DISPLAY */
 document.getElementById("qty"+i).value="0";
 document.getElementById("total"+i).innerText="$0.00";
 document.getElementById("total"+i).classList.remove("glow");
@@ -206,7 +218,6 @@ msg+="Grand Total: $"+grand.toFixed(2);
 window.open("https://wa.me/526635130363?text="+encodeURIComponent(msg));
 }
 
-/* BUILD */
 const container=document.querySelector(".products");
 
 products.forEach((p,i)=>{
