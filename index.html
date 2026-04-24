@@ -104,6 +104,17 @@ margin-left:10px;
 width:50px;
 margin-left:5px;
 }
+
+/* NEW */
+.checkout{
+margin-top:15px;
+}
+
+.status{
+margin-top:10px;
+font-size:0.9rem;
+opacity:0.8;
+}
 </style>
 </head>
 
@@ -237,9 +248,23 @@ margin-left:5px;
 <!-- CART -->
 <div class="cart">
 <h3>Your Cart</h3>
+
 <div id="cartItems" class="cart-items"></div>
+
 <div class="cart-total">$<span id="cartTotal">0.00</span></div>
+
+<div class="checkout">
+<input id="customerLocation" placeholder="Enter delivery area">
+<select id="distance" onchange="updateCart()">
+<option value="5">Nearby ($5)</option>
+<option value="10">Medium ($10)</option>
+<option value="15">Far ($15)</option>
+</select>
+</div>
+
 <button onclick="sendOrder()">Order on WhatsApp</button>
+
+<div id="status" class="status"></div>
 </div>
 
 <script>
@@ -310,8 +335,8 @@ $${item.total.toFixed(2)}
 </div>`;
 });
 
-const delivery = sum>0 ? 5 : 0;
-const grand = sum + delivery;
+const delivery=parseFloat(document.getElementById("distance").value)||0;
+const grand=sum+delivery;
 
 document.getElementById("cartItems").innerHTML=html + `<br>Delivery: $${delivery.toFixed(2)}`;
 document.getElementById("cartTotal").innerText=grand.toFixed(2);
@@ -325,31 +350,41 @@ updateCart();
 function editQty(i,val){
 val=parseInt(val);
 if(!val||val<=0){removeItem(i);return;}
+const pricePerItem = cart[i].total / cart[i].qty;
 cart[i].qty=val;
-cart[i].total=cart[i].total/cart[i].qty*val;
+cart[i].total=pricePerItem*val;
 updateCart();
+}
+
+function generateOrderId(){
+return "ORD-" + Math.floor(Math.random()*1000000);
 }
 
 function sendOrder(){
 if(cart.length===0)return;
 
-let msg="DIABLITO\n\nOrder Request\n\n";
-let sum=0;
+const orderId = generateOrderId();
+const location = document.getElementById("customerLocation").value || "Not provided";
+const delivery=parseFloat(document.getElementById("distance").value)||0;
+
+let msg="DIABLITO\n\nOrder ID: "+orderId+"\n\n";
 
 cart.forEach(item=>{
 msg+=item.name+"\nSize: "+item.size+"\nQty: "+item.qty+"\n$"+item.total.toFixed(2)+"\n\n";
-sum+=item.total;
 });
 
-const delivery=5;
+const sum=cart.reduce((a,b)=>a+b.total,0);
 const grand=sum+delivery;
 
 msg+="Delivery: $"+delivery.toFixed(2)+"\n";
+msg+="Location: "+location+"\n";
 msg+="Grand Total: $"+grand.toFixed(2)+"\n";
 
 window.open("https://wa.me/526635130363?text="+encodeURIComponent(msg));
 
-cart=[]; // 🔥 auto clear
+document.getElementById("status").innerText="Status: Order Sent (Preparing...)";
+
+cart=[];
 updateCart();
 }
 </script>
