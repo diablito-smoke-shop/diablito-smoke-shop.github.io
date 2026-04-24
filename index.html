@@ -82,7 +82,21 @@ border-top:2px solid #ff1a1a;
 margin-top:20px;
 }
 
-.cart h3{margin:0;font-size:1.5rem;}
+.cart-item{
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:#111;
+margin:5px 0;
+padding:8px;
+border-radius:5px;
+}
+
+.remove-btn{
+color:#ff1a1a;
+cursor:pointer;
+font-weight:bold;
+}
 
 .cart-total{
 font-size:2rem;
@@ -90,22 +104,9 @@ color:#00ff99;
 margin:10px 0;
 }
 
-.cart-count{font-size:0.9rem;opacity:0.8;}
-
-.cart-item{
-background:#111;
-margin:5px 0;
-padding:8px;
-border-radius:6px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-}
-
-.remove-btn{
-color:red;
-cursor:pointer;
-font-weight:bold;
+.cart-count{
+font-size:0.9rem;
+opacity:0.8;
 }
 </style>
 </head>
@@ -162,7 +163,7 @@ font-weight:bold;
 
 <div id="total1" class="item-total">$0.00</div>
 
-<button onclick="addToCart('Premium Strain','size1','qty1','custom1')">Add to Cart</button>
+<button onclick="addToCart(1,'Premium Strain','size1','qty1','custom1')">Add to Cart</button>
 </div>
 
 <!-- PRODUCT 2 -->
@@ -197,7 +198,7 @@ font-weight:bold;
 
 <div id="total2" class="item-total">$0.00</div>
 
-<button onclick="addToCart('Exotic Strain','size2','qty2','custom2')">Add to Cart</button>
+<button onclick="addToCart(2,'Exotic Strain','size2','qty2','custom2')">Add to Cart</button>
 </div>
 
 <!-- PRODUCT 3 -->
@@ -232,22 +233,22 @@ font-weight:bold;
 
 <div id="total3" class="item-total">$0.00</div>
 
-<button onclick="addToCart('Top Shelf Strain','size3','qty3','custom3')">Add to Cart</button>
+<button onclick="addToCart(3,'Top Shelf Strain','size3','qty3','custom3')">Add to Cart</button>
 </div>
 
 </div>
 
 <div class="cart">
-<h3>Your Cart Total</h3>
-<div class="cart-count">Items: <span id="cartCount">0</span></div>
+<h3>Your Cart</h3>
 <div id="cartItems"></div>
+<div class="cart-count">Items: <span id="cartCount">0</span></div>
 <div class="cart-total">$<span id="cartTotal">0.00</span></div>
 <button onclick="sendOrder()">Order on WhatsApp</button>
 </div>
 
 <script>
 const pricePerOz = 376.47;
-let cart = [];
+let cart = {};
 
 function swapImage(id,src){document.getElementById(id).src=src;}
 
@@ -286,44 +287,29 @@ el.addEventListener("change",updateTotals);
 el.addEventListener("input",updateTotals);
 });
 
-function addToCart(name,sizeId,qtyId,customId){
+function addToCart(id,name,sizeId,qtyId,customId){
 const size=parseFloat(document.getElementById(sizeId).value);
 const qty=getQty(qtyId,customId);
 if(!qty||qty<=0)return;
 
-const label=sizeLabel(size);
-const existing=cart.find(i=>i.name===name && i.size===label);
-
-if(existing){
-existing.qty=qty;
-existing.total=pricePerOz*size*qty;
-}else{
-cart.push({name:name,size:label,qty:qty,total:pricePerOz*size*qty});
-}
+cart[id]={
+name:name,
+size:sizeLabel(size),
+qty:qty,
+total:pricePerOz*size*qty
+};
 
 updateCart();
 }
 
-function resetProductUI(name){
-if(name==="Premium Strain"){
-document.getElementById("qty1").value="0";
-document.getElementById("custom1").value="";
-}
-if(name==="Exotic Strain"){
-document.getElementById("qty2").value="0";
-document.getElementById("custom2").value="";
-}
-if(name==="Top Shelf Strain"){
-document.getElementById("qty3").value="0";
-document.getElementById("custom3").value="";
-}
-}
+function removeItem(id){
+delete cart[id];
 
-function removeItem(index){
-const item=cart[index];
-resetProductUI(item.name); // 🔥 KEY FIX
+/* RESET UI */
+document.getElementById("qty"+id).value=0;
+document.getElementById("custom"+id).value="";
+document.getElementById("total"+id).innerText="$0.00";
 
-cart.splice(index,1);
 updateCart();
 updateTotals();
 }
@@ -332,41 +318,38 @@ function updateCart(){
 let sum=0;
 let html="";
 
-cart.forEach((item,index)=>{
+Object.keys(cart).forEach(id=>{
+const item=cart[id];
 sum+=item.total;
 
 html+=`
 <div class="cart-item">
-<div>
-${item.name}<br>
-${item.size} x ${item.qty}
-</div>
+<div>${item.name} (${item.size}) x${item.qty}</div>
 <div>
 $${item.total.toFixed(2)} 
-<span class="remove-btn" onclick="removeItem(${index})">❌</span>
+<span class="remove-btn" onclick="removeItem(${id})">❌</span>
 </div>
-</div>
-`;
+</div>`;
 });
 
 document.getElementById("cartItems").innerHTML=html;
 document.getElementById("cartTotal").innerText=sum.toFixed(2);
-document.getElementById("cartCount").innerText=cart.length;
+document.getElementById("cartCount").innerText=Object.keys(cart).length;
 }
 
 function sendOrder(){
-if(cart.length===0)return;
+if(Object.keys(cart).length===0)return;
 
 let msg="DIABLITO\n\nOrder Request\n\n";
 
-cart.forEach(item=>{
+Object.values(cart).forEach(item=>{
 msg+=item.name+"\n";
 msg+="Size: "+item.size+"\n";
 msg+="Quantity: "+item.qty+"\n";
 msg+="Item Total: $"+item.total.toFixed(2)+"\n\n";
 });
 
-const grand=cart.reduce((a,b)=>a+b.total,0);
+const grand=Object.values(cart).reduce((a,b)=>a+b.total,0);
 
 msg+="Grand Total: $"+grand.toFixed(2)+"\n";
 msg+="Please confirm availability and total.\n\n";
