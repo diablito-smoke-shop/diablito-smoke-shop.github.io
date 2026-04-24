@@ -253,119 +253,18 @@ opacity:0.8;
 </div>
 
 <script>
-const pricePerOz = 376.47;
+const pricePerOz = 300;
 let cart = {};
-
 function swapImage(id,src){document.getElementById(id).src=src;}
-
-function toggleCustomQty(selectId,inputId){
-const s=document.getElementById(selectId);
-const i=document.getElementById(inputId);
-i.style.display=(s.value==="custom")?"block":"none";
-updateTotals();
-}
-
-function getQty(q,c){
-const qs=document.getElementById(q).value;
-const cv=document.getElementById(c).value;
-return (qs==="custom"&&cv)?parseInt(cv):parseInt(qs);
-}
-
-function sizeLabel(s){
-if(s==0.125)return "1/8 oz";
-if(s==0.5)return "1/2 oz";
-if(s==1)return "1 oz";
-if(s==16)return "1 lb";
-return s+" oz";
-}
-
-function updateTotals(){
-for(let i=1;i<=3;i++){
-const size=parseFloat(document.getElementById("size"+i).value);
-const qty=getQty("qty"+i,"custom"+i)||0;
-const total=pricePerOz*size*qty;
-document.getElementById("total"+i).innerText="$"+total.toFixed(2);
-}
-}
-
-document.querySelectorAll("select,input").forEach(el=>{
-el.addEventListener("change",updateTotals);
-el.addEventListener("input",updateTotals);
-});
-
-function addToCart(id,name,sizeId,qtyId,customId){
-const size=parseFloat(document.getElementById(sizeId).value);
-const qty=getQty(qtyId,customId);
-if(!qty||qty<=0)return;
-
-cart[id]={name:name,size:sizeLabel(size),qty:qty,total:pricePerOz*size*qty};
-
-updateCart();
-
-/* UX FEEDBACK */
-const btn=document.getElementById("btn"+id);
-const card=document.getElementById("card"+id);
-
-btn.innerText="Added ✅";
-card.classList.add("active");
-
-setTimeout(()=>{
-btn.innerText="Add to Cart";
-card.classList.remove("active");
-},1000);
-
-/* AUTO SCROLL */
-document.getElementById("cartSection").scrollIntoView({behavior:"smooth"});
-}
-
-function removeItem(id){
-delete cart[id];
-document.getElementById("qty"+id).value=0;
-document.getElementById("custom"+id).value="";
-document.getElementById("total"+id).innerText="$0.00";
-updateCart();
-updateTotals();
-}
-
-function updateCart(){
-let sum=0;
-let html="";
-
-Object.keys(cart).forEach(id=>{
-const item=cart[id];
-sum+=item.total;
-
-html+=`
-<div class="cart-item">
-<div>${item.name} (${item.size}) x${item.qty}</div>
-<div>$${item.total.toFixed(2)} <span class="remove-btn" onclick="removeItem(${id})">❌</span></div>
-</div>`;
-});
-
-document.getElementById("cartItems").innerHTML=html;
-document.getElementById("cartTotal").innerText=sum.toFixed(2);
-document.getElementById("cartCount").innerText=Object.keys(cart).length;
-}
-
-function sendOrder(){
-if(Object.keys(cart).length===0)return;
-
-let msg="DIABLITO\n\nOrder Request\n\n";
-
-Object.values(cart).forEach(item=>{
-msg+=item.name+"\n";
-msg+="Size: "+item.size+"\n";
-msg+="Quantity: "+item.qty+"\n";
-msg+="Item Total: $"+item.total.toFixed(2)+"\n\n";
-});
-
-const grand=Object.values(cart).reduce((a,b)=>a+b.total,0);
-
-msg+="Grand Total: $"+grand.toFixed(2)+"\n";
-msg+="Please confirm availability and total.\n\n";
-
-window.open("https://wa.me/526635130363?text="+encodeURIComponent(msg));
-}
+function toggleCustomQty(selectId,inputId){const s=document.getElementById(selectId);const i=document.getElementById(inputId);i.style.display=(s.value==="custom")?"block":"none";updateTotals();}
+function getQty(q,c){const qs=document.getElementById(q).value;const cv=document.getElementById(c).value;return (qs==="custom"&&cv)?parseInt(cv):parseInt(qs);}
+function sizeLabel(s){if(s==0.125)return "1/8 oz";if(s==0.5)return "1/2 oz";if(s==1)return "1 oz";if(s==16)return "1 lb";return s+" oz";}
+function updateTotals(){for(let i=1;i<=3;i++){const size=parseFloat(document.getElementById("size"+i).value);const qty=getQty("qty"+i,"custom"+i)||0;const total=pricePerOz*size*qty;document.getElementById("total"+i).innerText="$"+total.toFixed(2);}}
+document.querySelectorAll("select,input").forEach(el=>{el.addEventListener("change",updateTotals);el.addEventListener("input",updateTotals);});
+function addToCart(id,name,sizeId,qtyId,customId){const size=parseFloat(document.getElementById(sizeId).value);const qty=getQty(qtyId,customId);if(!qty||qty<=0)return;cart[id]={name:name,size:sizeLabel(size),qty:qty,total:pricePerOz*size*qty};updateCart();const btn=document.getElementById("btn"+id);const card=document.getElementById("card"+id);btn.innerText="Added ✅";card.classList.add("active");setTimeout(()=>{btn.innerText="Add to Cart";card.classList.remove("active");},1000);document.getElementById("cartSection").scrollIntoView({behavior:"smooth"});}
+function removeItem(id){delete cart[id];document.getElementById("qty"+id).value=0;document.getElementById("custom"+id).value="";document.getElementById("total"+id).innerText="$0.00";updateCart();updateTotals();}
+function updateCart(){let sum=0;let html="";Object.keys(cart).forEach(id=>{const item=cart[id];sum+=item.total;html+=`<div class="cart-item"><div>${item.name} (${item.size}) x${item.qty}</div><div>$${item.total.toFixed(2)} <span class="remove-btn" onclick="removeItem(${id})">❌</span></div></div>`;});document.getElementById("cartItems").innerHTML=html;document.getElementById("cartTotal").innerText=sum.toFixed(2);document.getElementById("cartCount").innerText=Object.keys(cart).length;}
+function sendOrder(){if(Object.keys(cart).length===0)return;let msg="DIABLITO\n\nOrder Request\n\n";Object.values(cart).forEach(item=>{msg+=item.name+"\n";msg+="Size: "+item.size+"\n";msg+="Quantity: "+item.qty+"\n";msg+="Item Total: $"+item.total.toFixed(2)+"\n\n";});const grand=Object.values(cart).reduce((a,b)=>a+b.total,0);msg+="Grand Total: $"+grand.toFixed(2)+"\n";msg+="Please confirm availability and total.\n\n";window.open("https://wa.me/526635130363?text="+encodeURIComponent(msg));}
 </script>
 
 </body>
