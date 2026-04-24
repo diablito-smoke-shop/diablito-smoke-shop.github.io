@@ -77,12 +77,13 @@ updateCart();
 fetchRate();
 setInterval(fetchRate,60000);
 
-/* 🔥 FIXED PRICE TABLE */
+/* 🔥 UPDATED PRICE TABLE ONLY */
 function getUnitPrice(size){
 if(size==0.125) return 800 * rate;   // pesos → usd
 if(size==0.5) return 180;
 if(size==1) return 300;
-if(size==16) return 4300;
+if(size==8) return 2200;   // 1/2 lb ✅
+if(size==16) return 3600;  // lb ✅
 return 0;
 }
 
@@ -110,6 +111,7 @@ function sizeLabel(s){
 if(s==0.125)return "1/8 oz";
 if(s==0.5)return "1/2 oz";
 if(s==1)return "1 oz";
+if(s==8)return "1/2 lb";
 if(s==16)return "1 lb";
 return s+" oz";
 }
@@ -219,6 +221,7 @@ container.innerHTML+=`
 <option value="0.125">1/8 oz</option>
 <option value="0.5">1/2 oz</option>
 <option value="1">1 oz</option>
+<option value="8">1/2 lb</option>
 <option value="16">1 lb</option>
 </select>
 
