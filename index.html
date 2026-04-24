@@ -68,7 +68,7 @@ cursor:pointer;
 margin-top:5px;
 }
 
-/* 🔥 CLEAN TOTAL DISPLAY */
+/* TOTAL */
 .item-total{
 font-size:1.1rem;
 font-weight:bold;
@@ -76,7 +76,7 @@ margin-top:5px;
 color:#00ff99;
 }
 
-/* 🔥 CART UI */
+/* CART */
 .cart{
 background:#000;
 padding:20px;
@@ -93,6 +93,13 @@ font-size:1.5rem;
 font-size:2rem;
 color:#00ff99;
 margin:10px 0;
+}
+
+/* 🔥 NEW: CART ITEMS LIST */
+.cart-items{
+text-align:left;
+margin-top:10px;
+font-size:0.9rem;
 }
 </style>
 </head>
@@ -227,7 +234,11 @@ margin:10px 0;
 <!-- CART -->
 <div class="cart">
 <h3>Your Cart Total</h3>
+
+<div class="cart-items" id="cartItems"></div>
+
 <div class="cart-total">$<span id="cartTotal">0.00</span></div>
+
 <button onclick="sendOrder()">Order on WhatsApp</button>
 </div>
 
@@ -291,8 +302,15 @@ updateCart();
 
 function updateCart(){
 let sum=0;
-cart.forEach(i=>sum+=i.total);
+let list="";
+
+cart.forEach(i=>{
+sum+=i.total;
+list += i.name+" | "+i.size+" | Qty: "+i.qty+" | $"+i.total.toFixed(2)+"<br>";
+});
+
 document.getElementById("cartTotal").innerText=sum.toFixed(2);
+document.getElementById("cartItems").innerHTML=list;
 }
 
 function sendOrder(){
