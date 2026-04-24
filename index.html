@@ -27,11 +27,6 @@ border-radius:10px;
 overflow:hidden;
 box-shadow:0 0 10px rgba(255,0,0,0.3);
 padding-bottom:10px;
-transition:0.3s;
-}
-
-.card.active{
-box-shadow:0 0 20px #00ff99;
 }
 
 .card img{width:100%;height:140px;object-fit:cover}
@@ -71,7 +66,6 @@ width:90%;
 font-weight:bold;
 cursor:pointer;
 margin-top:5px;
-transition:0.2s;
 }
 
 .item-total{
@@ -88,20 +82,9 @@ border-top:2px solid #ff1a1a;
 margin-top:20px;
 }
 
-.cart-item{
-display:flex;
-justify-content:space-between;
-align-items:center;
-background:#111;
-margin:5px 0;
-padding:8px;
-border-radius:5px;
-}
-
-.remove-btn{
-color:#ff1a1a;
-cursor:pointer;
-font-weight:bold;
+.cart h3{
+margin:0;
+font-size:1.5rem;
 }
 
 .cart-total{
@@ -113,6 +96,22 @@ margin:10px 0;
 .cart-count{
 font-size:0.9rem;
 opacity:0.8;
+}
+
+.cart-item{
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:#111;
+margin:5px 0;
+padding:8px;
+border-radius:6px;
+}
+
+.remove-btn{
+color:red;
+cursor:pointer;
+font-weight:bold;
 }
 </style>
 </head>
@@ -138,7 +137,7 @@ opacity:0.8;
 <div class="products">
 
 <!-- PRODUCT 1 -->
-<div class="card" id="card1">
+<div class="card">
 <img id="main1" src="strain1.jpg">
 <div class="thumb-container">
 <img src="strain1.jpg" onclick="swapImage('main1',this.src)">
@@ -169,11 +168,11 @@ opacity:0.8;
 
 <div id="total1" class="item-total">$0.00</div>
 
-<button id="btn1" onclick="addToCart(1,'Premium Strain','size1','qty1','custom1')">Add to Cart</button>
+<button onclick="addToCart('Premium Strain','size1','qty1','custom1')">Add to Cart</button>
 </div>
 
 <!-- PRODUCT 2 -->
-<div class="card" id="card2">
+<div class="card">
 <img id="main2" src="strain2.jpg">
 <div class="thumb-container">
 <img src="strain2.jpg" onclick="swapImage('main2',this.src)">
@@ -204,11 +203,11 @@ opacity:0.8;
 
 <div id="total2" class="item-total">$0.00</div>
 
-<button id="btn2" onclick="addToCart(2,'Exotic Strain','size2','qty2','custom2')">Add to Cart</button>
+<button onclick="addToCart('Exotic Strain','size2','qty2','custom2')">Add to Cart</button>
 </div>
 
 <!-- PRODUCT 3 -->
-<div class="card" id="card3">
+<div class="card">
 <img id="main3" src="strain3.jpg">
 <div class="thumb-container">
 <img src="strain3.jpg" onclick="swapImage('main3',this.src)">
@@ -239,13 +238,13 @@ opacity:0.8;
 
 <div id="total3" class="item-total">$0.00</div>
 
-<button id="btn3" onclick="addToCart(3,'Top Shelf Strain','size3','qty3','custom3')">Add to Cart</button>
+<button onclick="addToCart('Top Shelf Strain','size3','qty3','custom3')">Add to Cart</button>
 </div>
 
 </div>
 
-<div class="cart" id="cartSection">
-<h3>Your Cart</h3>
+<div class="cart">
+<h3>Your Cart Total</h3>
 <div id="cartItems"></div>
 <div class="cart-count">Items: <span id="cartCount">0</span></div>
 <div class="cart-total">$<span id="cartTotal">0.00</span></div>
@@ -253,18 +252,119 @@ opacity:0.8;
 </div>
 
 <script>
-const pricePerOz = 300;
+// 🔥 FIXED PRICING SYSTEM
+function getPricePerOz(size){
+if(size == 0.125) return 376.47; // original 1/8 pricing restored
+if(size == 0.5) return 300;
+if(size == 1) return 300;
+if(size == 16) return 300;
+return 300;
+}
+
 let cart = {};
+
 function swapImage(id,src){document.getElementById(id).src=src;}
-function toggleCustomQty(selectId,inputId){const s=document.getElementById(selectId);const i=document.getElementById(inputId);i.style.display=(s.value==="custom")?"block":"none";updateTotals();}
-function getQty(q,c){const qs=document.getElementById(q).value;const cv=document.getElementById(c).value;return (qs==="custom"&&cv)?parseInt(cv):parseInt(qs);}
-function sizeLabel(s){if(s==0.125)return "1/8 oz";if(s==0.5)return "1/2 oz";if(s==1)return "1 oz";if(s==16)return "1 lb";return s+" oz";}
-function updateTotals(){for(let i=1;i<=3;i++){const size=parseFloat(document.getElementById("size"+i).value);const qty=getQty("qty"+i,"custom"+i)||0;const total=pricePerOz*size*qty;document.getElementById("total"+i).innerText="$"+total.toFixed(2);}}
-document.querySelectorAll("select,input").forEach(el=>{el.addEventListener("change",updateTotals);el.addEventListener("input",updateTotals);});
-function addToCart(id,name,sizeId,qtyId,customId){const size=parseFloat(document.getElementById(sizeId).value);const qty=getQty(qtyId,customId);if(!qty||qty<=0)return;cart[id]={name:name,size:sizeLabel(size),qty:qty,total:pricePerOz*size*qty};updateCart();const btn=document.getElementById("btn"+id);const card=document.getElementById("card"+id);btn.innerText="Added ✅";card.classList.add("active");setTimeout(()=>{btn.innerText="Add to Cart";card.classList.remove("active");},1000);document.getElementById("cartSection").scrollIntoView({behavior:"smooth"});}
-function removeItem(id){delete cart[id];document.getElementById("qty"+id).value=0;document.getElementById("custom"+id).value="";document.getElementById("total"+id).innerText="$0.00";updateCart();updateTotals();}
-function updateCart(){let sum=0;let html="";Object.keys(cart).forEach(id=>{const item=cart[id];sum+=item.total;html+=`<div class="cart-item"><div>${item.name} (${item.size}) x${item.qty}</div><div>$${item.total.toFixed(2)} <span class="remove-btn" onclick="removeItem(${id})">❌</span></div></div>`;});document.getElementById("cartItems").innerHTML=html;document.getElementById("cartTotal").innerText=sum.toFixed(2);document.getElementById("cartCount").innerText=Object.keys(cart).length;}
-function sendOrder(){if(Object.keys(cart).length===0)return;let msg="DIABLITO\n\nOrder Request\n\n";Object.values(cart).forEach(item=>{msg+=item.name+"\n";msg+="Size: "+item.size+"\n";msg+="Quantity: "+item.qty+"\n";msg+="Item Total: $"+item.total.toFixed(2)+"\n\n";});const grand=Object.values(cart).reduce((a,b)=>a+b.total,0);msg+="Grand Total: $"+grand.toFixed(2)+"\n";msg+="Please confirm availability and total.\n\n";window.open("https://wa.me/526635130363?text="+encodeURIComponent(msg));}
+
+function toggleCustomQty(selectId,inputId){
+const s=document.getElementById(selectId);
+const i=document.getElementById(inputId);
+i.style.display=(s.value==="custom")?"block":"none";
+updateTotals();
+}
+
+function getQty(q,c){
+const qs=document.getElementById(q).value;
+const cv=document.getElementById(c).value;
+return (qs==="custom"&&cv)?parseInt(cv):parseInt(qs);
+}
+
+function sizeLabel(s){
+if(s==0.125)return "1/8 oz";
+if(s==0.5)return "1/2 oz";
+if(s==1)return "1 oz";
+if(s==16)return "1 lb";
+return s+" oz";
+}
+
+function updateTotals(){
+for(let i=1;i<=3;i++){
+const size=parseFloat(document.getElementById("size"+i).value);
+const qty=getQty("qty"+i,"custom"+i)||0;
+const price=getPricePerOz(size);
+const total=price*size*qty;
+document.getElementById("total"+i).innerText="$"+total.toFixed(2);
+}
+}
+
+document.querySelectorAll("select,input").forEach(el=>{
+el.addEventListener("change",updateTotals);
+el.addEventListener("input",updateTotals);
+});
+
+function addToCart(name,sizeId,qtyId,customId){
+const size=parseFloat(document.getElementById(sizeId).value);
+const qty=getQty(qtyId,customId);
+if(!qty||qty<=0)return;
+
+const price=getPricePerOz(size);
+
+const key=name+"-"+size;
+
+cart[key]={
+name:name,
+size:sizeLabel(size),
+qty:qty,
+total:price*size*qty
+};
+
+updateCart();
+}
+
+function removeItem(key){
+delete cart[key];
+updateCart();
+updateTotals();
+}
+
+function updateCart(){
+let sum=0;
+let html="";
+
+Object.keys(cart).forEach(key=>{
+const item=cart[key];
+sum+=item.total;
+
+html+=`
+<div class="cart-item">
+<div>${item.name} (${item.size}) x${item.qty}</div>
+<div>$${item.total.toFixed(2)} <span class="remove-btn" onclick="removeItem('${key}')">✖</span></div>
+</div>`;
+});
+
+document.getElementById("cartItems").innerHTML=html;
+document.getElementById("cartTotal").innerText=sum.toFixed(2);
+document.getElementById("cartCount").innerText=Object.keys(cart).length;
+}
+
+function sendOrder(){
+if(Object.keys(cart).length===0)return;
+
+let msg="DIABLITO\n\nOrder Request\n\n";
+
+Object.values(cart).forEach(item=>{
+msg+=item.name+"\n";
+msg+="Size: "+item.size+"\n";
+msg+="Quantity: "+item.qty+"\n";
+msg+="Item Total: $"+item.total.toFixed(2)+"\n\n";
+});
+
+const grand=Object.values(cart).reduce((a,b)=>a+b.total,0);
+
+msg+="Grand Total: $"+grand.toFixed(2)+"\n";
+msg+="Please confirm availability and total.\n\n";
+
+window.open("https://wa.me/526635130363?text="+encodeURIComponent(msg));
+}
 </script>
 
 </body>
