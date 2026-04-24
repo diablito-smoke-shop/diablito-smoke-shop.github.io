@@ -62,6 +62,7 @@ button{background:#25D366;color:#fff;border:none;padding:10px;width:90%;font-wei
 </div>
 
 <script>
+/* 🔥 LIVE RATE */
 let rate = 17;
 
 async function fetchRate(){
@@ -76,21 +77,13 @@ updateCart();
 fetchRate();
 setInterval(fetchRate,60000);
 
-/* 🔥 ORIGINAL PRICE TABLE (UNCHANGED) */
+/* 🔥 UPDATED PRICE TABLE ONLY */
 function getUnitPrice(size){
-if(size==0.125) return 800 * rate;
+if(size==0.125) return 800 * rate;   // pesos → usd
 if(size==0.5) return 180;
 if(size==1) return 300;
-if(size==16) return 4300;
-return 0;
-}
-
-/* 🔥 ONLY FIX HERE */
-function getRegularPrice(size){
-if(size==0.125) return 1000 * rate; // ✅ ONLY CHANGE
-if(size==0.5) return 220;
-if(size==1) return 350;
-if(size==16) return 4000;
+if(size==8) return 2200;   // 1/2 lb ✅
+if(size==16) return 3600;  // lb ✅
 return 0;
 }
 
@@ -118,36 +111,25 @@ function sizeLabel(s){
 if(s==0.125)return "1/8 oz";
 if(s==0.5)return "1/2 oz";
 if(s==1)return "1 oz";
+if(s==8)return "1/2 lb";
 if(s==16)return "1 lb";
 return s+" oz";
 }
 
-/* 🔥 TOTAL + SAVINGS */
+/* 🔥 SYNC FIX */
 function updateTotals(){
 for(let i=1;i<=3;i++){
 const size=parseFloat(document.getElementById("size"+i).value);
 const qty=getQty("qty"+i,"custom"+i)||0;
-
-const unit=getUnitPrice(size);
-const regular=getRegularPrice(size);
-
-const total=unit*qty;
-const regularTotal=regular*qty;
-const savings=regularTotal-total;
+const total=getUnitPrice(size)*qty;
 
 const el=document.getElementById("total"+i);
-
-let text="$"+total.toFixed(2);
-if(savings>0){
-text+=" (Save $"+savings.toFixed(2)+")";
-}
-
-el.innerText=text;
+el.innerText="$"+total.toFixed(2);
 
 if(total>0) el.classList.add("glow");
 else el.classList.remove("glow");
 
-/* SYNC */
+/* 🔥 KEEP IN SYNC WITH CART */
 if(cart[i]){
 cart[i].total = total;
 cart[i].qty = qty;
@@ -174,6 +156,7 @@ updateCart();
 function removeItem(i){
 delete cart[i];
 
+/* 🔥 RESET ITEM DISPLAY */
 document.getElementById("qty"+i).value="0";
 document.getElementById("total"+i).innerText="$0.00";
 document.getElementById("total"+i).classList.remove("glow");
@@ -238,6 +221,7 @@ container.innerHTML+=`
 <option value="0.125">1/8 oz</option>
 <option value="0.5">1/2 oz</option>
 <option value="1">1 oz</option>
+<option value="8">1/2 lb</option>
 <option value="16">1 lb</option>
 </select>
 
