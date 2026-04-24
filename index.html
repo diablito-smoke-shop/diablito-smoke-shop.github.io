@@ -73,6 +73,12 @@ font-size:1.1rem;
 font-weight:bold;
 margin-top:5px;
 color:#00ff99;
+transition:0.3s;
+}
+
+/* 🔥 glow */
+.glow{
+box-shadow:0 0 10px #00ff99;
 }
 
 .cart{
@@ -82,36 +88,24 @@ border-top:2px solid #ff1a1a;
 margin-top:20px;
 }
 
-.cart h3{
-margin:0;
-font-size:1.5rem;
+.cart-item{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin:5px 0;
+}
+
+.remove{
+color:red;
+cursor:pointer;
+font-weight:bold;
+margin-left:10px;
 }
 
 .cart-total{
 font-size:2rem;
 color:#00ff99;
 margin:10px 0;
-}
-
-.cart-count{
-font-size:0.9rem;
-opacity:0.8;
-}
-
-.cart-item{
-display:flex;
-justify-content:space-between;
-align-items:center;
-background:#111;
-margin:5px 0;
-padding:8px;
-border-radius:6px;
-}
-
-.remove-btn{
-color:red;
-cursor:pointer;
-font-weight:bold;
 }
 </style>
 </head>
@@ -164,11 +158,11 @@ font-weight:bold;
 <option value="custom">More...</option>
 </select>
 
-<input type="number" id="custom1" placeholder="Enter quantity">
+<input type="number" id="custom1">
 
 <div id="total1" class="item-total">$0.00</div>
 
-<button onclick="addToCart('Premium Strain','size1','qty1','custom1')">Add to Cart</button>
+<button onclick="addToCart(1,'Premium Strain','size1','qty1','custom1')">Add to Cart</button>
 </div>
 
 <!-- PRODUCT 2 -->
@@ -199,11 +193,11 @@ font-weight:bold;
 <option value="custom">More...</option>
 </select>
 
-<input type="number" id="custom2" placeholder="Enter quantity">
+<input type="number" id="custom2">
 
 <div id="total2" class="item-total">$0.00</div>
 
-<button onclick="addToCart('Exotic Strain','size2','qty2','custom2')">Add to Cart</button>
+<button onclick="addToCart(2,'Exotic Strain','size2','qty2','custom2')">Add to Cart</button>
 </div>
 
 <!-- PRODUCT 3 -->
@@ -234,37 +228,31 @@ font-weight:bold;
 <option value="custom">More...</option>
 </select>
 
-<input type="number" id="custom3" placeholder="Enter quantity">
+<input type="number" id="custom3">
 
 <div id="total3" class="item-total">$0.00</div>
 
-<button onclick="addToCart('Top Shelf Strain','size3','qty3','custom3')">Add to Cart</button>
+<button onclick="addToCart(3,'Top Shelf Strain','size3','qty3','custom3')">Add to Cart</button>
 </div>
 
 </div>
 
 <div class="cart">
-<h3>Your Cart Total</h3>
+<h3>Your Cart</h3>
 <div id="cartItems"></div>
-<div class="cart-count">Items: <span id="cartCount">0</span></div>
 <div class="cart-total">$<span id="cartTotal">0.00</span></div>
 <button onclick="sendOrder()">Order on WhatsApp</button>
 </div>
 
 <script>
-function getPricePerOz(size){
-if(size == 0.125) return 376.47;
-return 300;
-}
-
+const pricePerOz = 300;
 let cart = {};
 
 function swapImage(id,src){document.getElementById(id).src=src;}
 
-function toggleCustomQty(selectId,inputId){
-const s=document.getElementById(selectId);
-const i=document.getElementById(inputId);
-i.style.display=(s.value==="custom")?"block":"none";
+function toggleCustomQty(s,i){
+document.getElementById(i).style.display=
+(document.getElementById(s).value==="custom")?"block":"none";
 updateTotals();
 }
 
@@ -286,9 +274,15 @@ function updateTotals(){
 for(let i=1;i<=3;i++){
 const size=parseFloat(document.getElementById("size"+i).value);
 const qty=getQty("qty"+i,"custom"+i)||0;
-const price=getPricePerOz(size);
-const total=price*size*qty;
-document.getElementById("total"+i).innerText="$"+total.toFixed(2);
+const total=pricePerOz*size*qty;
+const el=document.getElementById("total"+i);
+el.innerText="$"+total.toFixed(2);
+
+if(qty>0){
+el.classList.add("glow");
+}else{
+el.classList.remove("glow");
+}
 }
 }
 
@@ -297,60 +291,48 @@ el.addEventListener("change",updateTotals);
 el.addEventListener("input",updateTotals);
 });
 
-function addToCart(name,sizeId,qtyId,customId){
+function addToCart(id,name,sizeId,qtyId,customId){
 const size=parseFloat(document.getElementById(sizeId).value);
 const qty=getQty(qtyId,customId);
 if(!qty||qty<=0)return;
 
-const price=getPricePerOz(size);
-const key=name+"-"+size;
-
-cart[key]={
+cart[id]={
 name:name,
 size:sizeLabel(size),
 qty:qty,
-total:price*size*qty
+total:pricePerOz*size*qty
 };
 
 updateCart();
 }
 
-function removeItem(key){
-delete cart[key];
+function removeItem(id){
+delete cart[id];
 updateCart();
 
-/* 🔥 FIX: RESET ITEM DISPLAY */
-const parts = key.split("-");
-const name = parts[0];
-const size = parseFloat(parts[1]);
-
-for(let i=1;i<=3;i++){
-const s=parseFloat(document.getElementById("size"+i).value);
-if(s===size){
-document.getElementById("total"+i).innerText="$0.00";
-document.getElementById("qty"+i).value="0";
-}
-}
+/* reset ONLY that item */
+document.getElementById("qty"+id).value="0";
+document.getElementById("custom"+id).value="";
+updateTotals();
 }
 
 function updateCart(){
 let sum=0;
 let html="";
 
-Object.keys(cart).forEach(key=>{
-const item=cart[key];
+for(let id in cart){
+const item=cart[id];
 sum+=item.total;
 
 html+=`
 <div class="cart-item">
-<div>${item.name} (${item.size}) x${item.qty}</div>
-<div>$${item.total.toFixed(2)} <span class="remove-btn" onclick="removeItem('${key}')">✖</span></div>
+<span>${item.name} (${item.size} x${item.qty})</span>
+<span>$${item.total.toFixed(2)} <span class="remove" onclick="removeItem(${id})">✖</span></span>
 </div>`;
-});
+}
 
 document.getElementById("cartItems").innerHTML=html;
 document.getElementById("cartTotal").innerText=sum.toFixed(2);
-document.getElementById("cartCount").innerText=Object.keys(cart).length;
 }
 
 function sendOrder(){
@@ -358,17 +340,12 @@ if(Object.keys(cart).length===0)return;
 
 let msg="DIABLITO\n\nOrder Request\n\n";
 
-Object.values(cart).forEach(item=>{
-msg+=item.name+"\n";
-msg+="Size: "+item.size+"\n";
-msg+="Quantity: "+item.qty+"\n";
-msg+="Item Total: $"+item.total.toFixed(2)+"\n\n";
-});
+for(let id in cart){
+const i=cart[id];
+msg+=i.name+"\nSize: "+i.size+"\nQty: "+i.qty+"\n$"+i.total.toFixed(2)+"\n\n";
+}
 
-const grand=Object.values(cart).reduce((a,b)=>a+b.total,0);
-
-msg+="Grand Total: $"+grand.toFixed(2)+"\n";
-msg+="Please confirm availability and total.\n\n";
+msg+="Total: $"+document.getElementById("cartTotal").innerText;
 
 window.open("https://wa.me/526635130363?text="+encodeURIComponent(msg));
 }
