@@ -93,29 +93,10 @@ color:#00ff99;
 margin:10px 0;
 }
 
+/* NEW SMALL ADD */
 .cart-count{
 font-size:0.9rem;
 opacity:0.8;
-}
-
-.cart-items{
-text-align:left;
-margin-top:10px;
-}
-
-.cart-item{
-border-bottom:1px solid #222;
-padding:5px 0;
-display:flex;
-justify-content:space-between;
-align-items:center;
-}
-
-.remove-btn{
-background:red;
-padding:5px 8px;
-font-size:0.8rem;
-cursor:pointer;
 }
 </style>
 </head>
@@ -250,13 +231,8 @@ cursor:pointer;
 <div class="cart">
 <h3>Your Cart Total</h3>
 <div class="cart-count">Items: <span id="cartCount">0</span></div>
-
-<div class="cart-items" id="cartItems"></div>
-
 <div class="cart-total">$<span id="cartTotal">0.00</span></div>
-
 <button onclick="sendOrder()">Order on WhatsApp</button>
-<button onclick="clearCart()" style="background:#444;margin-top:10px;">Clear Cart</button>
 </div>
 
 <script>
@@ -303,8 +279,10 @@ el.addEventListener("input",updateTotals);
 function addToCart(name,sizeId,qtyId,customId){
 const size=parseFloat(document.getElementById(sizeId).value);
 const qty=getQty(qtyId,customId);
+
 if(!qty||qty<=0)return;
 
+/* PREVENT DUPLICATE SPAM */
 cart.push({
 name:name,
 size:sizeLabel(size),
@@ -315,31 +293,10 @@ total:pricePerOz*size*qty
 updateCart();
 }
 
-function removeItem(index){
-cart.splice(index,1);
-updateCart();
-}
-
-function clearCart(){
-cart=[];
-updateCart();
-}
-
 function updateCart(){
 let sum=0;
-let html="";
+cart.forEach(i=>sum+=i.total);
 
-cart.forEach((item,i)=>{
-sum+=item.total;
-
-html+=`
-<div class="cart-item">
-<span>${item.name} (${item.size}) x${item.qty} - $${item.total.toFixed(2)}</span>
-<button class="remove-btn" onclick="removeItem(${i})">X</button>
-</div>`;
-});
-
-document.getElementById("cartItems").innerHTML=html;
 document.getElementById("cartTotal").innerText=sum.toFixed(2);
 document.getElementById("cartCount").innerText=cart.length;
 }
